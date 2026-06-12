@@ -28,7 +28,7 @@ from sqlalchemy import select
 from datetime import datetime
 
 from ..db.database import get_db
-from ..db.models.change_request import ChangeRequest, ChangeRequestStatus, ChangeRequestRisk
+from ..db.models.change_request import ChangeRequest, ChangeStatus as ChangeRequestStatus, ChangeRiskLevel as ChangeRequestRisk
 
 
 router = APIRouter(prefix="/change-requests", tags=["change-requests"])

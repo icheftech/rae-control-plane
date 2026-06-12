@@ -3,14 +3,14 @@
 Emergency override for critical situations
 Bypass policies EXCEPT kill switches
 """
-from sqlalchemy import Column, String, DateTime, Boolean, Text, ForeignKey, Enum as SQLEnum
+from sqlalchemy import Column, String, DateTime, Boolean, Text, ForeignKey, Enum as SQLEnum, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from datetime import datetime, timedelta
 import uuid
 import enum
 
-from backend.app.db.base import Base
+from app.db.base import Base
 
 
 class BreakGlassReason(enum.Enum):
@@ -105,7 +105,7 @@ class BreakGlass(Base):
     
     # Related incident tracking
     incident_id = Column(String(255), nullable=True, index=True)
-    metadata = Column(JSONB, nullable=True, default=dict)
+    extra_metadata = Column(JSONB, nullable=True, default=dict, name="metadata")
     
     # Audit trail
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)

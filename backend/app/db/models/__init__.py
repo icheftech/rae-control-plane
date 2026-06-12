@@ -25,25 +25,23 @@ Usage:
 """
 
 # Base class for all models
-from .base import Base
+from app.db.base import Base
 
 # Phase 1: Registry Backbone (MAP)
-from .workflow import Workflow, WorkflowStatus, WorkflowRiskLevel
-from .capability import Capability, CapabilityCategory, CapabilityRiskLevel
-from .connector import Connector, ConnectorType, ConnectorStatus
+from .workflow import Workflow, WorkflowStatus, RiskLevel as WorkflowRiskLevel
+from .capability import Capability
+from .connector import Connector, ConnectorType
 
 # Phase 2: Controls (MANAGE)
 from .control_policy import (
     ControlPolicy,
-    ControlType,
-    EnforcementLevel,
-    PolicyStatus
+    PolicyAction,
+    ApprovalType,
 )
 from .kill_switch import (
     KillSwitch,
-    KillSwitchScope,
-    KillSwitchSeverity,
-    KillSwitchStatus
+    KillSwitchMode,
+    KillSwitchTrigger,
 )
 from .break_glass import (
     BreakGlass,
@@ -76,21 +74,16 @@ __all__ = [
     "WorkflowStatus",
     "WorkflowRiskLevel",
     "Capability",
-    "CapabilityCategory",
-    "CapabilityRiskLevel",
     "Connector",
     "ConnectorType",
-    "ConnectorStatus",
-    
+
     # Phase 2: Controls
     "ControlPolicy",
-    "ControlType",
-    "EnforcementLevel",
-    "PolicyStatus",
+    "PolicyAction",
+    "ApprovalType",
     "KillSwitch",
-    "KillSwitchScope",
-    "KillSwitchSeverity",
-    "KillSwitchStatus",
+    "KillSwitchMode",
+    "KillSwitchTrigger",
     "BreakGlass",
     "BreakGlassReason",
     "BreakGlassStatus",

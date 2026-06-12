@@ -12,7 +12,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
 
-from backend.app.db.base import Base
+from app.db.base import Base
 
 
 class Tenant(Base):

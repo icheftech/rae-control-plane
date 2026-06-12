@@ -24,7 +24,7 @@ import uuid
 import hashlib
 import json
 
-from .base import Base
+from app.db.base import Base
 
 
 class AuditEvent(Base):
@@ -85,7 +85,7 @@ class AuditEvent(Base):
     created_at = Column(DateTime, nullable=False, server_default=func.now(), index=True)
     
     # Metadata
-    metadata = Column(JSONB, nullable=False, default=dict)
+    extra_metadata = Column(JSONB, nullable=False, default=dict, name="metadata")
     """Additional metadata:
     - compliance_tags: Relevant frameworks (HIPAA, SOC2, etc.)
     - risk_level: Event severity (LOW, MEDIUM, HIGH, CRITICAL)
@@ -250,7 +250,7 @@ class AuditEvent(Base):
             } if self.resource_type else None,
             "outcome": self.outcome,
             "context": self.context,
-            "metadata": self.metadata,
+            "metadata": self.extra_metadata,
             "hash": {
                 "previous": self.previous_hash,
                 "current": self.event_hash

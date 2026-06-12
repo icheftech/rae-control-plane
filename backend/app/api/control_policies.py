@@ -42,7 +42,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from app.db.database import get_db
-from app.db.models.control_policy import ControlPolicy, PolicyOutcome
+from app.db.models.control_policy import ControlPolicy, PolicyAction as PolicyOutcome
 from pydantic import BaseModel, Field
 
 

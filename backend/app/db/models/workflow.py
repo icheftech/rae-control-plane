@@ -10,7 +10,7 @@ from datetime import datetime
 import uuid
 import enum
 
-from backend.app.db.base import Base
+from app.db.base import Base
 
 
 class RiskLevel(enum.Enum):
@@ -56,7 +56,7 @@ class Workflow(Base):
     created_by = Column(String(255), nullable=False)  # User/service principal
     
     # Flexible schema for domain-specific metadata
-    metadata = Column(JSONB, nullable=True, default=dict)
+    extra_metadata = Column(JSONB, nullable=True, default=dict, name="metadata")
     
     # Relationships
     capabilities = relationship("Capability", back_populates="workflow", cascade="all, delete-orphan")

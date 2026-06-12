@@ -8,7 +8,7 @@ Demonstrates testing patterns for S.S.O. Control Plane models:
 """
 import pytest
 from datetime import datetime
-from app.db.models.registry.workflow import Workflow
+from app.db.models.workflow import Workflow
 
 
 @pytest.mark.unit

@@ -23,7 +23,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from app.db.database import get_db
-from app.db.models.capability import Capability, RiskLevel
+from app.db.models.capability import Capability
+from app.db.models.workflow import RiskLevel
 
 
 router = APIRouter(tags=["capabilities"])

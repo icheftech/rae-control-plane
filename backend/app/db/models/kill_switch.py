@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import uuid
 import enum
 
-from backend.app.db.base import Base
+from app.db.base import Base
 
 
 class KillSwitchMode(enum.Enum):
@@ -81,7 +81,7 @@ class KillSwitch(Base):
     
     # Related incident tracking
     incident_id = Column(String(255), nullable=True, index=True)  # PagerDuty, Jira, etc
-    metadata = Column(JSONB, nullable=True, default=dict)
+    extra_metadata = Column(JSONB, nullable=True, default=dict, name="metadata")
     
     # Audit trail
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)

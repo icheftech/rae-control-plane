@@ -18,14 +18,14 @@ Compliance:
 """
 from datetime import datetime
 from typing import Dict, Any, List, Optional
-from sqlalchemy import Column, String, Text, DateTime, Boolean, Enum as SQLEnum, ForeignKey, Index
+from sqlalchemy import Column, String, Text, DateTime, Boolean, Enum as SQLEnum, ForeignKey, Index, Integer
 from sqlalchemy.dialects.postgresql import JSONB, UUID, ARRAY
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import uuid
 import enum
 
-from .base import Base
+from app.db.base import Base
 
 
 class GateType(str, enum.Enum):
@@ -100,7 +100,7 @@ class EnforcementGate(Base):
     capture_context = Column(Boolean, nullable=False, default=True)
     
     # Metadata
-    metadata = Column(JSONB, nullable=False, default=dict)
+    extra_metadata = Column(JSONB, nullable=False, default=dict, name="metadata")
     """Additional configuration:
     - timeout_seconds: Max time for gate evaluation
     - retry_policy: Retry configuration for transient failures
@@ -156,7 +156,7 @@ class EnforcementGate(Base):
                 "outputs": self.capture_outputs,
                 "context": self.capture_context
             },
-            "metadata": self.metadata,
+            "metadata": self.extra_metadata,
             "is_active": self.is_active,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
