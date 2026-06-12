@@ -1,4 +1,4 @@
-docker-compose.yml# S.S.O. Control Plane - Docker Compose Stack
+# S.S.O. Control Plane - Docker Compose Stack
 # Full production stack: FastAPI + PostgreSQL + Redis + Celery
 
 version: '3.8'
@@ -7,27 +7,27 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
-    container_name: sso-postgres
+    container_name: rae-postgres
     environment:
-      POSTGRES_DB: sso_control_plane
-      POSTGRES_USER: sso_user
+      POSTGRES_DB: rae_control_plane
+      POSTGRES_USER: rae_user
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme123}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sso_user -d sso_control_plane"]
+      test: ["CMD-SHELL", "pg_isready -U rae_user -d rae_control_plane"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - sso-network
+      - rae-network
 
   # Redis Cache & Message Broker
   redis:
     image: redis:7-alpine
-    container_name: sso-redis
+    container_name: rae-redis
     command: redis-server --requirepass ${REDIS_PASSWORD:-changeme456}
     ports:
       - "6379:6379"
@@ -37,16 +37,16 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - sso-network
+      - rae-network
 
   # FastAPI Application
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sso-api
+    container_name: rae-api
     environment:
-      DATABASE_URL: postgresql://sso_user:${POSTGRES_PASSWORD:-changeme123}@postgres:5432/sso_control_plane
+      DATABASE_URL: postgresql://rae_user:${POSTGRES_PASSWORD:-changeme123}@postgres:5432/rae_control_plane
       REDIS_URL: redis://:${REDIS_PASSWORD:-changeme456}@redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
       ENVIRONMENT: ${ENVIRONMENT:-development}
@@ -60,7 +60,7 @@ services:
     volumes:
       - ./backend:/app
     networks:
-      - sso-network
+      - rae-network
     restart: unless-stopped
 
   # Celery Worker (for async tasks)
@@ -68,10 +68,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sso-celery-worker
+    container_name: rae-celery-worker
     command: celery -A app.celery_app worker --loglevel=info
     environment:
-      DATABASE_URL: postgresql://sso_user:${POSTGRES_PASSWORD:-changeme123}@postgres:5432/sso_control_plane
+      DATABASE_URL: postgresql://rae_user:${POSTGRES_PASSWORD:-changeme123}@postgres:5432/rae_control_plane
       REDIS_URL: redis://:${REDIS_PASSWORD:-changeme456}@redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
     depends_on:
@@ -79,7 +79,7 @@ services:
       - redis
       - api
     networks:
-      - sso-network
+      - rae-network
     restart: unless-stopped
 
   # Celery Beat (for scheduled tasks)
@@ -87,10 +87,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sso-celery-beat
+    container_name: rae-celery-beat
     command: celery -A app.celery_app beat --loglevel=info
     environment:
-      DATABASE_URL: postgresql://sso_user:${POSTGRES_PASSWORD:-changeme123}@postgres:5432/sso_control_plane
+      DATABASE_URL: postgresql://rae_user:${POSTGRES_PASSWORD:-changeme123}@postgres:5432/rae_control_plane
       REDIS_URL: redis://:${REDIS_PASSWORD:-changeme456}@redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production}
     depends_on:
@@ -98,11 +98,11 @@ services:
       - redis
       - api
     networks:
-      - sso-network
+      - rae-network
     restart: unless-stopped
 
 networks:
-  sso-network:
+  rae-network:
     driver: bridge
 
 volumes:

@@ -1,4 +1,4 @@
-Dockerfile# S.S.O. Control Plane - Production Dockerfile
+# S.S.O. Control Plane - Production Dockerfile
 # Multi-stage build for optimal image size and security
 
 # Stage 1: Builder
@@ -26,21 +26,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client \
     curl \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd -m -u 1000 sso && chown -R sso:sso /app
+    && useradd -m -u 1000 rae && chown -R rae:rae /app
 
 # Copy Python dependencies from builder
-COPY --from=builder /root/.local /home/sso/.local
+COPY --from=builder /root/.local /home/rae/.local
 
 # Copy application code
-COPY --chown=sso:sso backend/app /app/app
-COPY --chown=sso:sso backend/migrations /app/migrations
-COPY --chown=sso:sso backend/alembic.ini /app/
+COPY --chown=rae:rae backend/app /app/app
+COPY --chown=rae:rae backend/migrations /app/migrations
+COPY --chown=rae:rae backend/alembic.ini /app/
 
 # Switch to non-root user
-USER sso
+USER rae
 
 # Add local Python packages to PATH
-ENV PATH=/home/sso/.local/bin:$PATH
+ENV PATH=/home/rae/.local/bin:$PATH
 
 # Expose application port
 EXPOSE 8000

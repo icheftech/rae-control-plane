@@ -23,7 +23,7 @@ from app.db.models import Base
 # Format: postgresql://user:password@host:port/database
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://sso_user:sso_password@localhost:5432/sso_control_plane"
+    "postgresql://rae_user:rae_password@localhost:5432/rae_control_plane"
 )
 
 # Engine configuration
