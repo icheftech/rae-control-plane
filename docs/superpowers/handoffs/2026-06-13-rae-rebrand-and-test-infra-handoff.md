@@ -14,18 +14,22 @@
 
 2. **Pre-existing import bugs fixed** — the backend app was unimportable before the session started due to 6 broken `Base` import paths, a SQLAlchemy reserved attribute conflict (`metadata`), mismatched enum exports, and API-layer import mismatches. All fixed.
 
-3. **Test suite made to pass (SQLite baseline)** — 7 tests now pass using a SQLite + type-patching workaround. This is explicitly a temporary solution.
+3. **Test suite made to pass (SQLite baseline)** — 7 tests now pass using a SQLite + type-patching workaround. This was explicitly a temporary solution.
 
-4. **PostgreSQL test infrastructure designed and specced** — a full design and spec exist for migrating to Testcontainers + `postgres:15-alpine`. Implementation has NOT started.
+4. **PostgreSQL test infrastructure designed, implemented, and pushed** ✅ — SQLite workaround replaced with real Testcontainers `postgres:15-alpine`. 7/7 tests pass against real PostgreSQL. `TEST_INFRA_REVIEW.md` written and committed. Four commits pushed to `origin/main`:
+   - `07b52f5` — docs: add PostgreSQL test infrastructure implementation plan
+   - `c8c4d86` — chore: add testcontainers[postgresql] to requirements
+   - `37f4279` — feat(tests): replace SQLite fixtures with Testcontainers PostgreSQL
+   - `1764082` — docs: add TEST_INFRA_REVIEW.md — postgres test infra migration results
 
-5. **One unpushed commit** — `a63a8ef` (PostgreSQL test infra design spec) has not been pushed. All other work is on `origin/main`.
+5. **Frontend MSAL package names fixed** ✅ — `frontend/package.json` corrected: `@msal/browser` → `@azure/msal-browser`, `@msal/react` → `@azure/msal-react`. Pending `npm install` verification.
 
 **Current state:**
 - Branch: `main`
 - Remote: `https://github.com/icheftech/rae-control-plane.git`
-- Tests: 7/7 passing (SQLite, temporary)
+- Tests: 7/7 passing against **real `postgres:15-alpine`** (Testcontainers)
 - Coverage: 62.81% (below the 80% gate — pre-existing gap, not new)
-- 1 commit unpushed: `a63a8ef`
+- Working tree: clean (all commits pushed)
 
 ---
 
@@ -318,29 +322,16 @@ During the GitHub repo rename, Docker Desktop may still show the old `sso-contro
 
 ### Priority order
 
-1. **Push the unpushed commit**
-   ```bash
-   cd /Users/flashhoustonllc/rae-control-plane && git push origin main
-   ```
+1. ~~**Push the unpushed commit**~~ ✅ DONE — `a63a8ef` was already pushed; handoff was stale.
 
-2. **Complete PostgreSQL test infrastructure** (next major work item)
-   - Write the implementation plan (continue the interrupted `writing-plans` skill invocation)
-   - Execute via `superpowers:subagent-driven-development`
-   - Spec: `docs/superpowers/specs/2026-06-13-postgres-test-infra-design.md`
-   - Key tasks:
-     - Add `testcontainers[postgresql]==4.14.2` to `requirements.txt`
-     - Replace `conftest.py` with Testcontainers + nested-transaction fixtures
-     - Run functional test suite (`pytest --no-cov -q`) → expect 7 passed
-     - Run full coverage suite (`pytest`) → document result even if below 80%
-     - Write `TEST_INFRA_REVIEW.md` at repo root
-     - Commit and push
+2. ~~**Complete PostgreSQL test infrastructure**~~ ✅ DONE — 7/7 tests pass against `postgres:15-alpine`. Commits `07b52f5`, `c8c4d86`, `37f4279`, `1764082` pushed to `origin/main`.
 
-3. **Generate `TEST_INFRA_REVIEW.md`** as part of step 2 above (required deliverable per user spec)
+3. ~~**Generate `TEST_INFRA_REVIEW.md`**~~ ✅ DONE — committed at repo root as `1764082`.
 
-4. **Fix the frontend MSAL package name**
-   - `frontend/package.json`: `@msal/browser` → `@azure/msal-browser`
-   - Run `npm install && npm run build` to confirm build passes
-   - Scope: one-line dependency fix
+4. **Fix the frontend MSAL package name** — IN PROGRESS
+   - `frontend/package.json` corrected: `@msal/browser` → `@azure/msal-browser`, `@msal/react` → `@azure/msal-react`
+   - Run `cd frontend && npm install && npm run build` to confirm build passes
+   - Commit once build verified
 
 5. **Generate real Alembic migrations**
    - With PostgreSQL test infra in place, run `alembic revision --autogenerate`
@@ -372,55 +363,68 @@ You are continuing work on R.A.E. (Runtime Authority Engine), SST's flagship AI 
 **Branch:** main
 **Tech stack:** FastAPI + SQLAlchemy 2.0 + PostgreSQL 15 (backend), Next.js 15 (frontend)
 
-## What was completed in the last session
+## What was completed (all sessions to date)
 
-1. Full rebrand from S.S.O. (Southern Shade Orchestrator) → R.A.E. (Runtime Authority Engine). Every brand string replaced, GitHub repo renamed, local folder renamed. Brand grep gate passes (exit=1).
+1. Full rebrand from S.S.O. (Southern Shade Orchestrator) → R.A.E. (Runtime Authority Engine). Brand grep gate passes (exit=1). GitHub repo renamed `icheftech/sso-control-plane` → `icheftech/rae-control-plane`.
 
 2. Pre-existing backend import bugs fixed: Base imports, SQLAlchemy reserved `metadata` attribute renamed to `extra_metadata` (with `name="metadata"`), backref conflicts resolved, enum export mismatches fixed.
 
-3. Test suite currently passes (7/7) using a SQLite + type-patching workaround. This is TEMPORARY and must be replaced.
+3. PostgreSQL Testcontainers test infrastructure — COMPLETE. `backend/tests/conftest.py` replaced with three-layer fixtures: session-scoped `postgres_container` (postgres:15-alpine), session-scoped `test_engine` (create_all), function-scoped `test_db` (SAVEPOINT rollback). 7/7 tests pass against real PostgreSQL. `TEST_INFRA_REVIEW.md` committed at repo root.
 
 4. Coverage gate fails: 62.81% vs required 80%. Pre-existing gap — no API endpoint tests exist yet.
 
-5. One unpushed commit: a63a8ef (PostgreSQL test infra design spec). Push first.
+5. Frontend MSAL package names corrected in `frontend/package.json`: `@msal/browser` → `@azure/msal-browser`, `@msal/react` → `@azure/msal-react`. `npm install` and build verification pending.
 
-## Your next task: PostgreSQL test infrastructure
+## Recent commits (pushed to origin/main)
 
-The SQLite workaround in `backend/tests/conftest.py` must be replaced with real PostgreSQL via Testcontainers.
+- `1764082` — docs: add TEST_INFRA_REVIEW.md — postgres test infra migration results
+- `37f4279` — feat(tests): replace SQLite fixtures with Testcontainers PostgreSQL
+- `c8c4d86` — chore: add testcontainers[postgresql] to requirements
+- `07b52f5` — docs: add PostgreSQL test infrastructure implementation plan
 
-**Design spec:** `docs/superpowers/specs/2026-06-13-postgres-test-infra-design.md`
-(Read this file first — it is the source of truth for the implementation.)
+## Your immediate tasks
 
-**Key requirements:**
-- Add `testcontainers[postgresql]==4.14.2` to `backend/requirements.txt` (also install into `backend/venv`)
-- PostgreSQL image: `postgres:15-alpine` (matches docker-compose.yml)
-- Replace `conftest.py` entirely:
-  - Session-scoped `postgres_container` fixture: `PostgresContainer("postgres:15-alpine")`
-  - Session-scoped `test_engine` fixture: `Base.metadata.create_all(bind=engine)` (Alembic upgrade() is a stub — document as temporary shortcut in TEST_INFRA_REVIEW.md)
-  - Function-scoped `test_db` fixture: connection-level nested transaction (SAVEPOINT) so app-level `session.commit()` calls do not bleed data between tests — use `connection.begin_nested()` with an `after_transaction_end` event listener to re-issue the SAVEPOINT after each nested commit
-  - `client` fixture: unchanged in interface, wires `test_db` into `app.dependency_overrides[get_db]`
-  - Delete `_patch_metadata_for_sqlite()`, `StaticPool` import, and `TEST_DATABASE_URL = "sqlite:///:memory:"`
-- Docker Desktop must be running before tests. Start it with `open -a Docker` and wait ~8 seconds if needed.
-- Run two test passes and document both:
-  1. `pytest --no-cov -q` (functional — all 7 must pass)
-  2. `pytest` with full pytest.ini addopts (coverage — document result; gate may still fail due to pre-existing coverage gap, that is acceptable)
+### 1. Verify and commit the frontend MSAL fix
 
-**Required deliverable:** `TEST_INFRA_REVIEW.md` at repo root containing:
-- Root cause of original failures
-- Previous SQLite/UUID/JSONB error text
-- Files changed and what each change does
-- Package added (with version actually installed)
-- Both test run outputs verbatim
-- Tests passing / failing after migration
-- Coverage summary
-- Recommendations for future testing standards (including: generate real Alembic migrations, add API endpoint tests to reach 80% coverage, consider pytest markers to separate unit vs integration tests)
+`frontend/package.json` has already been edited — `@msal/browser` and `@msal/react` corrected to `@azure/msal-*`. Your job:
 
-**Do NOT modify production models, routes, or application logic** unless a test reveals an actual production bug.
+```bash
+cd /Users/flashhoustonllc/rae-control-plane/frontend
+npm install
+npm run build
+```
 
-After the test infra is complete, commit, push, and let me know. Then we will:
-- Fix the frontend MSAL package name bug (`@msal/browser` → `@azure/msal-browser`)
-- Generate real Alembic migrations
-- Review the merged tenants API for correctness
+If the build passes, commit:
+```bash
+git add frontend/package.json frontend/package-lock.json
+git commit -m "fix: correct MSAL package names to @azure/msal-browser and @azure/msal-react"
+git push origin main
+```
+
+If the build fails for any reason other than the MSAL package name, report what you find before fixing anything else.
+
+### 2. Generate real Alembic migrations
+
+`backend/migrations/versions/001_initial_schema.py` has an empty `upgrade()` body — it is a stub. With Testcontainers available, run autogenerate against a live container:
+
+```bash
+cd /Users/flashhoustonllc/rae-control-plane/backend
+source venv/bin/activate
+# start a throwaway postgres container for autogenerate
+python -c "
+from testcontainers.postgres import PostgresContainer
+with PostgresContainer('postgres:15-alpine') as pg:
+    print(pg.get_connection_url())
+"
+# use that URL for alembic
+DATABASE_URL=<url> alembic revision --autogenerate -m 'Initial schema'
+```
+
+Replace the stub migration body with the autogenerated one. Switch the test fixture from `Base.metadata.create_all()` to `alembic upgrade head` once the migration is real.
+
+### 3. Code review of merged remote work
+
+The tenants API (`backend/app/api/tenants.py`) was merged without review. Run `/code-review` on the diff and pay particular attention to `tenant.py` model relationships.
 
 ## Key file locations
 
@@ -430,25 +434,26 @@ After the test infra is complete, commit, push, and let me know. Then we will:
 - DB config: `backend/app/db/base.py` (has `Base` declarative base + `get_db`)
 - API routes: `backend/app/api/` (workflows, capabilities, connectors, control_policies, kill_switches, change_requests, llm, tenants)
 - Alembic migration (stub): `backend/migrations/versions/001_initial_schema.py`
-- Requirements: `backend/requirements.txt` (NOT repo root requirements.txt — that one is a copy)
+- Requirements: repo root `requirements.txt` (no separate backend/requirements.txt)
 - Venv: `backend/venv/` (Python 3.12.7)
 - Docker stack: `docker-compose.yml` at repo root — uses postgres:15-alpine as `rae-postgres` container
+- Frontend: `frontend/` (Next.js 15, package.json already edited)
 
 ## Important model notes
 
 - `Base` is in `backend/app/db/base.py` (NOT `database.py` — that file has its own orphan Base)
 - `get_db` FastAPI dependency is also in `backend/app/db/base.py`
-- `metadata` column was renamed to `extra_metadata` in Python (DB column name stays `metadata` via `name="metadata"`)
+- `metadata` column renamed to `extra_metadata` in Python (DB column name stays `metadata` via `name="metadata"`)
 - All models import Base via `from app.db.base import Base` (not relative imports)
-- `workflow.py` has `version` as a `Column(String(50))` and `UniqueConstraint("name", "version")` added during the last session for test compatibility
+- `workflow.py` has `version` as a `Column(String(50))` and `UniqueConstraint("name", "version")`
 
 ## Environment
 
 - Python 3.12.7 in `backend/venv/`
 - Docker Desktop 28.3.2 (may need `open -a Docker && sleep 8` to start)
-- psycopg2-binary 2.9.9 already installed in venv
-- testcontainers NOT yet installed (install as part of this task)
-- No local PostgreSQL server installed
+- psycopg2-binary 2.9.9 + testcontainers[postgresql]==4.14.2 installed in venv
+- Node.js ≥18 required for frontend build
+- No local PostgreSQL server installed (use Testcontainers)
 ```
 
 ---
