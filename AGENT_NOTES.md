@@ -1,13 +1,13 @@
-# 🔒 S.S.O. CONTROL PLANE — AGENT IMPLEMENTATION NOTES
+# 🔒 R.A.E. CONTROL PLANE — AGENT IMPLEMENTATION NOTES
 
 **Read this entire document before writing any code.**
 This system is a **real-world enterprise platform**, not a demo, tutorial, or class project.
 
 ## 0. Mission Context
 
-You are implementing the **S.S.O. (Southern Shade Orchestrator)** control plane for **Southern Shade LLC**.
+You are implementing the **R.A.E. (Runtime Authority Engine)** control plane for **Southern Shade Technologies (SST)**.
 
-S.S.O. is a **governed autonomy platform** designed for:
+R.A.E. is a **governed autonomy platform** designed for:
 - Regulated enterprises
 - Government, healthcare, finance
 - Environments handling PHI/PII

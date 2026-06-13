@@ -1,4 +1,4 @@
-# Southern Shade LLC – Tenant Onboarding (S.S.O.)
+# Southern Shade LLC – Tenant Onboarding (R.A.E.)
 
 ## 1. Organization profile
 
@@ -13,7 +13,7 @@
 ## 2. Roles and people
 
 - CTO / Platform Owner: Leroy Brown
-  - Responsibilities: S.S.O. technical owner, kill-switch authority, change governance
+  - Responsibilities: R.A.E. technical owner, kill-switch authority, change governance
 - CFO: Chelanda Smith-Brown
   - Responsibilities: Financial approvals, billing, spend controls
 - AI Tech Leads: Chefel33 & Fredrick
@@ -78,7 +78,7 @@
     - Fetching solicitations
     - Reading internal capability docs
     - Creating draft artifacts (bids, emails, briefs)
-  - Policy enforcement via S.S.O. gates before any external action (sending, submitting, deploying).
+  - Policy enforcement via R.A.E. gates before any external action (sending, submitting, deploying).
 
 ## 6. Tenant configuration (example JSON)
 
