@@ -101,17 +101,17 @@ class TestWorkflowModel:
 
     def test_workflow_metadata_json(self, test_db, sample_workflow_data):
         """Test JSON metadata field."""
-        sample_workflow_data["metadata"] = {
+        sample_workflow_data["extra_metadata"] = {
             "author": "test-user",
             "tags": ["production", "critical"],
             "complexity": "high"
         }
-        
+
         workflow = Workflow(**sample_workflow_data)
         test_db.add(workflow)
         test_db.commit()
         test_db.refresh(workflow)
 
-        assert workflow.metadata["author"] == "test-user"
-        assert len(workflow.metadata["tags"]) == 2
-        assert workflow.metadata["complexity"] == "high"
+        assert workflow.extra_metadata["author"] == "test-user"
+        assert len(workflow.extra_metadata["tags"]) == 2
+        assert workflow.extra_metadata["complexity"] == "high"

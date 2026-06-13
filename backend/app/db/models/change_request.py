@@ -212,7 +212,7 @@ class ChangeRequest(Base):
     updated_at = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now())
 
     # Relationships
-    workflow = relationship("Workflow", foreign_keys=[workflow_id], backref="change_requests")
+    workflow = relationship("Workflow", foreign_keys=[workflow_id], back_populates="change_requests")
     capability = relationship("Capability", foreign_keys=[capability_id], backref="change_requests")
     control_policy = relationship("ControlPolicy", foreign_keys=[control_policy_id], backref="change_requests")
 
