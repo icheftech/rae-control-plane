@@ -26,6 +26,27 @@ R.A.E. is built on four core tenets: **visibility** (every agent action is logge
 
 ---
 
+## 📊 Project Status
+
+**Current Phase:** Phase 5 - Identity Federation (In Progress)
+
+**Completed Phases:**
+- ✅ Phase 1: Registry Backbone (NIST AI RMF MAP)
+- ✅ Phase 2: Controls Framework (NIST AI RMF MANAGE)
+- ✅ Phase 3: Language Model Integration (NIST AI RMF MAP)
+- ✅ Phase 4: Compliance Engine (NIST AI RMF GOVERN)
+
+**Upcoming Phases:**
+- ⏳ Phase 5: Identity Federation (Q1 2026)
+- 📋 Phase 6: AI Model Governance (Q2 2026)
+- 📋 Phase 7: Advanced Threat Detection (Q2 2026)
+- 📋 Phase 8: Multi-Cloud Integration (Q3 2026)
+- 📋 Phase 9: Production Hardening (Q3 2026)
+
+📄 **[View Complete Development Roadmap](PHASES.md)**
+
+---
+
 ## 📚 Architecture
 
 ### System Components

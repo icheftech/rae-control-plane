@@ -104,7 +104,7 @@ app.add_middleware(
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Register API routers
-from app.api import workflows, capabilities, connectors, control_policies, kill_switches, change_requests, llm
+from app.api import workflows, capabilities, connectors, control_policies, kill_switches, change_requests, llm, tenants
 
 app.include_router(workflows.router, prefix="/api")
 app.include_router(capabilities.router, prefix="/api")
@@ -112,6 +112,7 @@ app.include_router(connectors.router, prefix="/api")
 app.include_router(control_policies.router, prefix="/api")
 app.include_router(kill_switches.router, prefix="/api")
 app.include_router(change_requests.router, prefix="/api")
+app.include_router(tenants.router, prefix="/api")
 app.include_router(llm.router)  # LLM chat completions endpoint
 
 # Health check endpoint
@@ -135,6 +136,15 @@ async def root():
         "description": "Enterprise-Grade AI Governance Platform",
         "docs": "/api/docs",
         "health": "/health",
+    }
+
+# Version endpoint
+@app.get("/version", tags=["Version"])
+async def get_version():
+    """Get API version information."""
+    return {
+        "version": VERSION,
+        "service": "S.S.O. Control Plane",
     }
 
 # Exception handlers
