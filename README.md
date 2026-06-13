@@ -1,8 +1,8 @@
-# S.S.O. Control Plane
+# R.A.E. Control Plane
 
-**Enterprise-Grade AI Governance Platform**
+**Runtime Authority Engine — Enterprise AI Governance Platform**
 
-> Platform and service offering for PHI/PII-grade AI systems management with cryptographic audit chains and production change governance
+> R.A.E. is Southern Shade Technologies' flagship AI governance platform: a control plane and Chief Orchestrator system that governs how AI agents operate inside enterprise and federal environments. Agents propose actions only — execution is gated by registry, policy, kill-switch, and audit layers.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
@@ -11,7 +11,9 @@
 
 ## 🎯 Overview
 
-The **S.S.O. (Southern Shade Orchestrator) Control Plane** is an enterprise-grade governance platform for AI agent systems, designed for regulated industries requiring PHI/PII-grade compliance. It provides cryptographic audit trails, multi-stage approval workflows, and real-time enforcement of governance policies.
+The **R.A.E. (Runtime Authority Engine) Control Plane** is an enterprise-grade governance platform for AI agent systems, designed for regulated industries requiring PHI/PII-grade compliance. R.A.E. operates on two layers: the **control plane** (a structured registry of AI agents, policy controls, enforcement rules, a compliance engine, and identity federation) and the **Chief Orchestrator** (a conversational AI command layer atop the control plane whose own actions appear in the audit chain as a distinct actor type — the governance system is itself governed).
+
+R.A.E. is built on four core tenets: **visibility** (every agent action is logged and traceable), **control** (policies constrain any registered agent in real time), **compliance** (evidence is generated automatically for regulatory frameworks), and **federation** (identity and authority span organizational and agency boundaries without sacrificing auditability).
 
 ### Key Features
 
@@ -29,7 +31,7 @@ The **S.S.O. (Southern Shade Orchestrator) Control Plane** is an enterprise-grad
 ### System Components
 
 ```
-S.S.O. Control Plane
+R.A.E. Control Plane
 ├── Phase 1: Registry Backbone (MAP)
 │   ├── Workflows - AI agent task definitions
 │   ├── Capabilities - Granular permission system
@@ -76,8 +78,8 @@ S.S.O. Control Plane
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/icheftech/sso-control-plane.git
-cd sso-control-plane
+git clone https://github.com/icheftech/rae-control-plane.git
+cd rae-control-plane
 ```
 
 2. **Install dependencies**
@@ -88,10 +90,10 @@ pip install -r requirements.txt
 3. **Configure database**
 ```bash
 # Set environment variable
-export DATABASE_URL="postgresql://user:password@localhost:5432/sso_control_plane"
+export DATABASE_URL="postgresql://user:password@localhost:5432/rae_control_plane"
 
 # Create database
-createdb sso_control_plane
+createdb rae_control_plane
 ```
 
 4. **Initialize database tables**
@@ -211,6 +213,16 @@ is_valid = audit_event.verify_chain(previous_event=last_event)
 
 ---
 
+## 🎖️ Federal Readiness
+
+R.A.E. is designed as the governance wrapper that makes autonomous AI deployable at scale in federal contexts, including CFIC/ARCYBER "AI Effects at the Edge" missions. It answers the evaluator's hardest questions:
+
+- **Can you prove this agent did what you said it did?** Yes — cryptographic hash-chained audit log, signed per event.
+- **Can you shut it down mid-mission?** Yes — kill switches at GLOBAL, WORKFLOW, and CAPABILITY scope, enforced before any policy check.
+- **Can you prove policy compliance without manual review?** Yes — the compliance engine generates evidence automatically against NIST AI RMF, SOC 2, HIPAA, and ISO 27001.
+
+---
+
 ## 🔒 Compliance & Security
 
 ### Framework Alignment
@@ -249,7 +261,7 @@ is_valid = audit_event.verify_chain(previous_event=last_event)
 
 ## 🤝 Contributing
 
-This is a proprietary platform by **Southern Shade LLC**. For partnership inquiries:
+This is a proprietary platform by **Southern Shade Technologies (SST)**. For partnership inquiries:
 
 - **Email**: [email protected]
 - **Website**: [southernshade.com](https://southernshade.com)
@@ -262,13 +274,15 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 ---
 
-## 🏢 About Southern Shade LLC
+## 🏢 About Southern Shade Technologies
 
-**Southern Shade LLC** provides enterprise AI governance solutions for regulated industries. Our platform enables organizations to deploy AI agents safely and compliantly while maintaining full audit trails and policy enforcement.
+**Southern Shade Technologies (SST)** provides enterprise AI governance solutions for regulated industries. Our platform enables organizations to deploy AI agents safely and compliantly while maintaining full audit trails and policy enforcement.
+
+Southern Shade Technologies is the operating brand of Southern Shade LLC (Texas, USA).
 
 ### Contact
 
-- **Company**: Southern Shade LLC
+- **Company**: Southern Shade Technologies (SST)
 - **Location**: Texas, USA
 - **Focus**: Enterprise AI Governance & Compliance
 
