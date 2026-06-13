@@ -8,7 +8,6 @@ Southern Shade LLC is the first tenant onboarding.
 
 from sqlalchemy import Column, String, DateTime, Boolean, Text
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
 
@@ -54,15 +53,8 @@ class Tenant(Base):
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     created_by = Column(String(255), nullable=False)  # User/service principal
     
-    # Relationships (all tenant-scoped resources)
-    workflows = relationship("Workflow", back_populates="tenant", cascade="all, delete-orphan")
-    capabilities = relationship("Capability", back_populates="tenant", cascade="all, delete-orphan")
-    connectors = relationship("Connector", back_populates="tenant", cascade="all, delete-orphan")
-    control_policies = relationship("ControlPolicy", back_populates="tenant", cascade="all, delete-orphan")
-    kill_switches = relationship("KillSwitch", back_populates="tenant", cascade="all, delete-orphan")
-    break_glass_records = relationship("BreakGlass", back_populates="tenant", cascade="all, delete-orphan")
-    audit_events = relationship("AuditEvent", back_populates="tenant")
-    change_requests = relationship("ChangeRequest", back_populates="tenant")
+    # NOTE: Tenant relationships to other models are deferred until tenant_id FK
+    # columns are added to those tables in a future migration.
     
     def __repr__(self):
         return f"<Tenant(key='{self.tenant_key}', name='{self.tenant_name}', active={self.is_active})>"
