@@ -20,22 +20,32 @@ router = APIRouter(
 
 # Pydantic Schemas
 class TenantBase(BaseModel):
-    name: str = Field(..., description="Tenant organization name")
-    domain: str = Field(..., description="Tenant domain identifier")
+    tenant_name: str = Field(..., description="Tenant organization name")
+    tenant_key: str = Field(..., description="Unique tenant identifier (e.g. 'southern_shade_llc')")
     is_active: bool = Field(default=True, description="Tenant active status")
 
 class TenantCreate(TenantBase):
-    pass
+    created_by: str = Field(..., description="User or service principal creating this tenant")
+    description: str | None = None
+    primary_contact_email: str | None = None
+    billing_email: str | None = None
 
 class TenantUpdate(BaseModel):
-    name: str | None = None
-    domain: str | None = None
+    tenant_name: str | None = None
+    tenant_key: str | None = None
     is_active: bool | None = None
+    description: str | None = None
+    primary_contact_email: str | None = None
+    billing_email: str | None = None
 
 class TenantResponse(TenantBase):
     id: UUID
+    description: str | None
+    primary_contact_email: str | None
+    billing_email: str | None
+    created_by: str
     created_at: datetime
-    updated_at: datetime | None
+    updated_at: datetime
 
     class Config:
         from_attributes = True
@@ -47,15 +57,14 @@ async def create_tenant(
     db: Session = Depends(get_db)
 ):
     """Create a new tenant organization."""
-    # Check if domain already exists
-    existing = db.query(Tenant).filter(Tenant.domain == tenant.domain).first()
+    existing = db.query(Tenant).filter(Tenant.tenant_key == tenant.tenant_key).first()
     if existing:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Tenant with domain '{tenant.domain}' already exists"
+            detail=f"Tenant with key '{tenant.tenant_key}' already exists"
         )
-    
-    db_tenant = Tenant(**tenant.dict())
+
+    db_tenant = Tenant(**tenant.model_dump())
     db.add(db_tenant)
     db.commit()
     db.refresh(db_tenant)
@@ -98,11 +107,11 @@ async def update_tenant(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Tenant {tenant_id} not found"
         )
-    
-    update_data = tenant_update.dict(exclude_unset=True)
+
+    update_data = tenant_update.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(tenant, field, value)
-    
+
     db.commit()
     db.refresh(tenant)
     return tenant
@@ -119,7 +128,7 @@ async def delete_tenant(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Tenant {tenant_id} not found"
         )
-    
+
     db.delete(tenant)
     db.commit()
     return None

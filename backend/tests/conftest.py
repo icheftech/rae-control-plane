@@ -15,11 +15,15 @@ from testcontainers.postgres import PostgresContainer
 from alembic.config import Config
 from alembic import command
 
-from app.main import app
-from app.db.base import Base, get_db
+from app.db.base import Base
+from app.db.database import get_db
 
 # Import all models so they register on Base.metadata before create_all
 import app.db.models  # noqa: F401
+
+# Import the FastAPI instance AFTER `import app.db.models` to avoid
+# the `app` name being shadowed by the `app` package module.
+from app.main import app as fastapi_app
 
 
 # ---------------------------------------------------------------------------
@@ -92,10 +96,10 @@ def client(test_db):
     def override_get_db():
         yield test_db
 
-    app.dependency_overrides[get_db] = override_get_db
-    with TestClient(app) as test_client:
+    fastapi_app.dependency_overrides[get_db] = override_get_db
+    with TestClient(fastapi_app) as test_client:
         yield test_client
-    app.dependency_overrides.clear()
+    fastapi_app.dependency_overrides.clear()
 
 
 # ---------------------------------------------------------------------------
