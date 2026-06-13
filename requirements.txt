@@ -1,4 +1,4 @@
-# S.S.O. Control Plane - Python Dependencies
+# R.A.E. Control Plane - Python Dependencies
 # Enterprise-grade platform and service offering (NOT a product)
 
 # Core Web Framework

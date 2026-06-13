@@ -1,4 +1,4 @@
-# S.S.O. Control Plane - Production Dockerfile
+# R.A.E. Control Plane - Production Dockerfile
 # Multi-stage build for optimal image size and security
 
 # Stage 1: Builder

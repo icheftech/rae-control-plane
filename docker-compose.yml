@@ -1,4 +1,4 @@
-# S.S.O. Control Plane - Docker Compose Stack
+# R.A.E. Control Plane - Docker Compose Stack
 # Full production stack: FastAPI + PostgreSQL + Redis + Celery
 
 version: '3.8'
