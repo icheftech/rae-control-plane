@@ -6,9 +6,9 @@ import { MsalProvider } from '@/components/providers/MsalProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'SSO Control Plane - Enterprise AI Governance',
+  title: 'R.A.E. Control Plane - Enterprise AI Governance',
   description: 'NIST AI RMF-aligned governance and control plane for enterprise AI systems with PHI/PII compliance.',
-  keywords: 'AI governance, NIST AI RMF, SSO, control plane, compliance, HIPAA, SOC 2',
+  keywords: 'AI governance, NIST AI RMF, R.A.E., control plane, compliance, HIPAA, SOC 2',
 };
 
 export default function RootLayout({

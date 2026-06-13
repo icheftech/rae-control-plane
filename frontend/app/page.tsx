@@ -5,7 +5,7 @@ export default function HomePage() {
         {/* Header */}
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            SSO Control Plane
+            R.A.E. Control Plane
           </h1>
           <p className="text-lg text-gray-600">
             Enterprise AI Governance Dashboard - NIST AI RMF Aligned

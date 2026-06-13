@@ -1,5 +1,5 @@
 /**
- * SSO Control Plane - Frontend API Client
+ * R.A.E. Control Plane - Frontend API Client
  * 
  * Axios-based HTTP client with automatic JWT token injection from MSAL.
  * Connects Next.js dashboard to FastAPI backend for Registry/Controls/Enforcement.

@@ -1,7 +1,7 @@
 {
-  "name": "sso-control-plane-frontend",
+  "name": "rae-control-plane-frontend",
   "version": "1.0.0",
-  "description": "S.S.O. Control Plane - Enterprise AI Governance Dashboard",
+  "description": "R.A.E. Control Plane - Enterprise AI Governance Dashboard",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -1,6 +1,6 @@
-# SSO Control Plane - Frontend Dashboard
+# R.A.E. Control Plane - Frontend Dashboard
 
-Next.js 15 dashboard for the SSO Control Plane's enterprise-grade AI governance system. Provides real-time visibility and control for Registry, Controls, and Enforcement layers with Microsoft Entra ID (Azure AD) SSO.
+Next.js 15 dashboard for the R.A.E. Control Plane's enterprise-grade AI governance system. Provides real-time visibility and control for Registry, Controls, and Enforcement layers with Microsoft Entra ID (Azure AD) SSO.
 
 ## Architecture
 
@@ -34,7 +34,7 @@ frontend/
 ## Prerequisites
 
 ### Required Services
-1. **Backend API**: SSO Control Plane FastAPI service running
+1. **Backend API**: R.A.E. Control Plane FastAPI service running
 2. **Azure Entra ID**: Application registration with OAuth 2.0
 3. **Node.js**: Version 20.x or 22.x (LTS)
 4. **Database**: PostgreSQL backend (accessed via API)
@@ -42,7 +42,7 @@ frontend/
 ### Azure App Registration Setup
 1. Navigate to [Azure Portal](https://portal.azure.com) → Microsoft Entra ID → App registrations
 2. Create new registration:
-   - Name: `SSO Control Plane Dashboard`
+   - Name: `R.A.E. Control Plane Dashboard`
    - Supported account types: Single tenant
    - Redirect URI: `http://localhost:3000` (development)
 3. Copy Application (client) ID → use as `NEXT_PUBLIC_MSAL_CLIENT_ID`
