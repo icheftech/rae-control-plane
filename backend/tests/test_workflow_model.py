@@ -1,6 +1,6 @@
 """Unit tests for Workflow model
 
-Demonstrates testing patterns for S.S.O. Control Plane models:
+Demonstrates testing patterns for R.A.E. Control Plane models:
 - Model creation and validation
 - Relationships and foreign keys
 - Business logic methods

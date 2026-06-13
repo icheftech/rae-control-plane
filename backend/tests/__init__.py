@@ -1,4 +1,4 @@
-"""Test suite initialization for S.S.O. Control Plane
+"""Test suite initialization for R.A.E. Control Plane
 
 Enterprise-grade test suite covering all components:
 - Models: Registry, Controls, Enforcement

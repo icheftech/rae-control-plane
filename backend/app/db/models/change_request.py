@@ -3,7 +3,7 @@
 Phase 3: Enforcement Integration (FLAGSHIP FEATURE)
 Purpose: Formal approval workflow for high-risk production changes
 
-This is the FLAGSHIP use case for the S.S.O. Control Plane:
+This is the FLAGSHIP use case for the R.A.E. Control Plane:
 - Production deployments of AI agents/workflows
 - Changes to PHI/PII-handling workflows
 - Modifications to safety-critical capabilities

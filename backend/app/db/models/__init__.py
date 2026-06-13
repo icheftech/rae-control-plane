@@ -1,4 +1,4 @@
-"""S.S.O. Control Plane - Database Models Package
+"""R.A.E. Control Plane - Database Models Package
 
 This package contains all SQLAlchemy ORM models for the control plane.
 
@@ -102,5 +102,5 @@ __all__ = [
 
 # Version info
 __version__ = "0.1.0"
-__author__ = "Southern Shade LLC"
-__description__ = "S.S.O. Control Plane - Enterprise AI Governance Platform"
+__author__ = "Southern Shade Technologies (SST)"
+__description__ = "R.A.E. Control Plane - Enterprise AI Governance Platform"

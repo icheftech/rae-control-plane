@@ -1,10 +1,10 @@
-"""Initial schema - All 11 S.S.O. Control Plane models
+"""Initial schema - All 11 R.A.E. Control Plane models
 
 Revision ID: 001
 Revises: 
 Create Date: 2025-12-30 12:00:00.000000
 
-Creates all tables for the S.S.O. Control Plane enterprise AI governance platform:
+Creates all tables for the R.A.E. Control Plane enterprise AI governance platform:
 
 Phase 1 - Registry Backbone (NIST MAP):
 - workflows: AI agent workflow definitions

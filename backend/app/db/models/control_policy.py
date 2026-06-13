@@ -1,7 +1,7 @@
 """Control Policy Model - Phase 2: Controls (NIST AI RMF MANAGE)
 
 Governance policies for production change management
-The heart of S.S.O.: No changes without approval
+The heart of R.A.E.: No changes without approval
 """
 from sqlalchemy import Column, String, DateTime, Boolean, Text, ForeignKey, Enum as SQLEnum, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB

@@ -1,5 +1,5 @@
 """Alembic Migration Environment
-S.S.O. Control Plane - Database Migration Runtime Environment
+R.A.E. Control Plane - Database Migration Runtime Environment
 
 This module configures the Alembic migration environment for both offline
 and online migration modes. It imports all models to ensure autogenerate

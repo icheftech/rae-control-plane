@@ -1,4 +1,4 @@
-"""ModelProvider - Unified LLM interface for S.S.O.
+"""ModelProvider - Unified LLM interface for R.A.E.
 
 Provides a single interface for calling language models with:
 - Multi-provider support (OpenAI-compatible APIs, local models, etc.)
@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 class ModelProvider:
-    """Wraps LLM API calls with S.S.O. governance."""
+    """Wraps LLM API calls with R.A.E. governance."""
 
     def __init__(
         self,

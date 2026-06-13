@@ -1,4 +1,4 @@
-"""Pytest configuration and fixtures for S.S.O. Control Plane test suite
+"""Pytest configuration and fixtures for R.A.E. Control Plane test suite
 
 Provides reusable test fixtures for:
 - Database sessions (isolated test DB)

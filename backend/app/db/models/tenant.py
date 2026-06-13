@@ -1,6 +1,6 @@
 """Tenant Model - Multi-Tenancy Support
 
-Enables S.S.O. Control Plane to serve multiple organizations (tenants)
+Enables R.A.E. Control Plane to serve multiple organizations (tenants)
 with complete data isolation and tenant-specific configuration.
 
 Southern Shade LLC is the first tenant onboarding.
@@ -18,7 +18,7 @@ from app.db.base import Base
 class Tenant(Base):
     """Tenant model for multi-tenant SaaS deployment
     
-    Each tenant represents an independent organization using the S.S.O. platform.
+    Each tenant represents an independent organization using the R.A.E. platform.
     All resources (workflows, capabilities, connectors, etc.) are scoped to a tenant.
     """
     __tablename__ = "tenants"

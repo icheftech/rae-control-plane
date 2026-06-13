@@ -1,6 +1,6 @@
 """SQLAlchemy Base Class and Database Session
 
-Central database configuration for S.S.O. Control Plane
+Central database configuration for R.A.E. Control Plane
 Enterprise-grade: Connection pooling, retry logic, audit logging
 """
 from sqlalchemy import create_engine, event

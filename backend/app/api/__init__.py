@@ -1,4 +1,4 @@
-"""S.S.O. Control Plane - API Package
+"""R.A.E. Control Plane - API Package
 REST API routers and endpoints.
 """
 

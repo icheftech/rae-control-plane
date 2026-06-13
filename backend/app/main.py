@@ -1,7 +1,7 @@
-"""S.S.O. Control Plane - FastAPI Application
+"""R.A.E. Control Plane - FastAPI Application
 Enterprise-Grade AI Governance Platform
 
-Main application entry point for the S.S.O. (Southern Shade Orchestrator)
+Main application entry point for the R.A.E. (Runtime Authority Engine)
 Control Plane. Provides REST API endpoints for managing AI agent workflows,
 capabilities, connectors, control policies, kill switches, break glass access,
 and production change governance.
@@ -27,7 +27,7 @@ from app.db.database import init_db, check_db_connection
 
 # App metadata
 VERSION = "0.1.0"
-TITLE = "S.S.O. Control Plane API"
+TITLE = "R.A.E. Control Plane API"
 DESCRIPTION = """
 Enterprise-Grade AI Governance Platform for PHI/PII-compliant AI agent systems.
 
@@ -65,7 +65,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     - Shutdown: Clean up resources
     """
     # Startup
-    print("🚀 S.S.O. Control Plane starting up...")
+    print("🚀 R.A.E. Control Plane starting up...")
     try:
         if check_db_connection():
             print("✅ Database connection successful")
@@ -77,7 +77,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     yield
     
     # Shutdown
-    print("🛑 S.S.O. Control Plane shutting down...")
+    print("🛑 R.A.E. Control Plane shutting down...")
 
 # Create FastAPI application
 app = FastAPI(
@@ -130,7 +130,7 @@ async def health_check():
 async def root():
     """API root endpoint with service information."""
     return {
-        "service": "S.S.O. Control Plane",
+        "service": "R.A.E. Control Plane",
         "version": VERSION,
         "description": "Enterprise-Grade AI Governance Platform",
         "docs": "/api/docs",

@@ -1,4 +1,4 @@
-"""Agent runtime package for S.S.O. workflows.
+"""Agent runtime package for R.A.E. workflows.
 
 Provides base agent classes and concrete implementations
 for Southern Shade workflows defined in SOUTHERN_SHADE_ONBOARDING.md.

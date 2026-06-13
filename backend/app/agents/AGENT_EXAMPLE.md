@@ -1,14 +1,14 @@
-# S.S.O. Agent Implementation Guide
+# R.A.E. Agent Implementation Guide
 
-Example implementation showing how to build an S.S.O. workflow agent that uses the ModelProvider.
+Example implementation showing how to build an R.A.E. workflow agent that uses the ModelProvider.
 
 ## Overview
 
-S.S.O. agents are Python classes that:
+R.A.E. agents are Python classes that:
 1. Call the ModelProvider (via `/v1/chat/completions` or direct service import)
 2. Tag all LLM calls with `tenant_id` and `workflow_id` for audit trails
 3. Check kill-switches and control policies before executing
-4. Emit audit events to S.S.O. tables
+4. Emit audit events to R.A.E. tables
 
 ## Example: Sourcing Agent (Simplified)
 
@@ -46,7 +46,7 @@ Analyze the solicitation and determine:
             temperature=0.3,  # Lower for factual analysis
         )
         
-        # Step 3: Parse response and emit to S.S.O. audit
+        # Step 3: Parse response and emit to R.A.E. audit
         return {
             "analysis": result["content"],
             "model_used": result["model"],
@@ -117,14 +117,14 @@ if __name__ == "__main__":
 # .env
 LLM_API_KEY=your_groq_or_openai_key
 LLM_BASE_URL=https://api.groq.com/openai/v1  # or OpenAI
-DATABASE_URL=postgresql://user:pass@localhost/sso
+DATABASE_URL=postgresql://user:pass@localhost/rae
 ```
 
 ## Next Steps
 
 1. **Add Tools**: Extend `generate_chat()` with `tools` parameter for function calling
 2. **Gate Execution**: Check kill-switches before LLM calls
-3. **Persist Results**: Store agent outputs in S.S.O. tables for review
+3. **Persist Results**: Store agent outputs in R.A.E. tables for review
 4. **Web UI**: Build a dashboard to monitor agent runs and audit trails
 
 See `SOUTHERN_SHADE_ONBOARDING.md` for the full workflow definitions.

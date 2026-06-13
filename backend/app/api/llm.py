@@ -1,4 +1,4 @@
-"""LLM API Router - Chat completions endpoint for S.S.O.
+"""LLM API Router - Chat completions endpoint for R.A.E.
 
 Exposes POST /v1/chat/completions for internal agents and external clients
 (like the Southern Shade website) to call the ModelProvider.
@@ -46,7 +46,7 @@ async def create_chat_completion(
     Generate a chat completion using the configured LLM provider.
 
     - Accepts OpenAI-compatible message format
-    - Injects tenant_id and workflow_id for S.S.O. audit trails
+    - Injects tenant_id and workflow_id for R.A.E. audit trails
     - Returns content, tool calls, usage stats, and audit metadata
     """
     try:
