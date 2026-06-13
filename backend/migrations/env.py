@@ -19,12 +19,13 @@ from app.db.models import Base
 from app.db.models.workflow import Workflow
 from app.db.models.capability import Capability
 from app.db.models.connector import Connector
-from app.db.models.control_policy import ControlPolicy, PolicyStatus, PolicyEnforcement
-from app.db.models.kill_switch import KillSwitch, KillSwitchState, KillSwitchScope
-from app.db.models.break_glass import BreakGlass, BreakGlassStatus
+from app.db.models.control_policy import ControlPolicy, PolicyAction, ApprovalType
+from app.db.models.kill_switch import KillSwitch, KillSwitchMode, KillSwitchTrigger
+from app.db.models.break_glass import BreakGlass, BreakGlassReason, BreakGlassStatus
 from app.db.models.audit_event import AuditEvent
 from app.db.models.enforcement_gate import EnforcementGate, GateExecution, GateType, GateOutcome
 from app.db.models.change_request import ChangeRequest, ChangeType, ChangeStatus, ChangeRiskLevel
+from app.db.models.tenant import Tenant
 
 # Alembic Config object
 config = context.config
