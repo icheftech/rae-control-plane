@@ -209,5 +209,10 @@ __marimo__/
 # macOS
 .DS_Store
 
+# Node / frontend
+node_modules/
+.next/
+frontend/.next/
+
 # Saved env backups
 *.env.save
