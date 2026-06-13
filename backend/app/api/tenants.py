@@ -1,6 +1,6 @@
 """Tenants API Router
 
-Provides REST API endpoints for tenant management in the S.S.O. Control Plane.
+Provides REST API endpoints for tenant management in the R.A.E. Control Plane.
 Tenants represent organizational units with isolated data and resources.
 """
 

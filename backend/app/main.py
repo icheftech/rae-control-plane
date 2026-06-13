@@ -144,7 +144,7 @@ async def get_version():
     """Get API version information."""
     return {
         "version": VERSION,
-        "service": "S.S.O. Control Plane",
+        "service": "R.A.E. Control Plane",
     }
 
 # Exception handlers
