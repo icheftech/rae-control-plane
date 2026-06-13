@@ -1,20 +1,20 @@
-# S.S.O. Tokenization Strategy: Building the Governance Layer for $28 Trillion Market
+# R.A.E. Tokenization Strategy: Building the Governance Layer for $28 Trillion Market
 
 ## Executive Summary
 
-**The Opportunity**: ARK Invest projects digital assets will reach $28 trillion by 2030, with tokenized real-world assets (RWAs) hitting $11 trillion. Your S.S.O. platform is perfectly positioned to capture this market as the **governance and compliance infrastructure** that institutions desperately need.
+**The Opportunity**: ARK Invest projects digital assets will reach $28 trillion by 2030, with tokenized real-world assets (RWAs) hitting $11 trillion. Your R.A.E. platform is perfectly positioned to capture this market as the **governance and compliance infrastructure** that institutions desperately need.
 
 **The Insight**: You're not building smart contracts—you're building the **enterprise control plane** that makes tokenization safe, compliant, and auditable for regulated institutions.
 
-**The Strategy**: Add a tokenization module to your existing S.S.O. platform (no fork needed) that extends your governance capabilities to blockchain-based asset management.
+**The Strategy**: Add a tokenization module to your existing R.A.E. platform (no fork needed) that extends your governance capabilities to blockchain-based asset management.
 
 ---
 
-## Why S.S.O. is Perfectly Positioned
+## Why R.A.E. is Perfectly Positioned
 
 ### 1. Your Core Platform Already Solves Tokenization's Biggest Problems
 
-| Tokenization Challenge | S.S.O. Solution (Already Built) | Value to Institutions |
+| Tokenization Challenge | R.A.E. Solution (Already Built) | Value to Institutions |
 |------------------------|--------------------------------|----------------------|
 | **Identity & KYC/AML** | Microsoft Entra ID integration + role-based access | Institutional investors use corporate SSO, not crypto wallets |
 | **Human Approval Gates** | ChangeRequest workflow with risk-based routing | SEC requires human oversight of high-risk transactions |
@@ -30,14 +30,14 @@
 - Value is migrating from infrastructure (Ethereum, Solana) to applications (Uniswap, Aave)
 - Platforms closest to users (wallets, exchanges, governance layers) capture the most value
 
-**What This Means for S.S.O.**:
+**What This Means for R.A.E.**:
 - Smart contracts are commoditized (ERC-7518 is open source)
 - The PLATFORM that orchestrates contracts, enforces compliance, and manages identity wins
 - Your platform-first approach (70% platform, 30% contracts) is exactly right
 
 ### 3. Institutional Rails You've Already Built
 
-Your S.S.O. platform has **9 of the 10 institutional rails** that tokenization needs:
+Your R.A.E. platform has **9 of the 10 institutional rails** that tokenization needs:
 
 ✅ **Enterprise Identity Federation** - Entra ID OAuth2/OIDC flows
 ✅ **Cryptographic Audit Chain** - SHA-256 hash-linked events
@@ -59,7 +59,7 @@ Your S.S.O. platform has **9 of the 10 institutional rails** that tokenization n
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    S.S.O. Core Platform                      │
+│                    R.A.E. Core Platform                      │
 │  (Identity, Audit, Enforcement, Workflows, Kill Switches)    │
 └─────────────────────────────────────────────────────────────┘
                             │
@@ -331,7 +331,7 @@ class TokenDeploymentRequest(Base):
 
 ---
 
-## Integration with Existing S.S.O. Components
+## Integration with Existing R.A.E. Components
 
 ### 1. Workflow Engine Integration
 
@@ -356,7 +356,7 @@ change_request = ChangeRequest(
     workflow_id=asset.asset_id  # Links to tokenized asset
 )
 
-# Step 3: Approval workflow (EXISTING S.S.O. CODE)
+# Step 3: Approval workflow (EXISTING R.A.E. CODE)
 # - HIGH risk = 2 approvers (CFO + General Counsel)
 # - Enforcement gates run
 # - Kill switches checked
@@ -376,12 +376,12 @@ deployment_request = TokenDeploymentRequest(
 # - Transaction sent to blockchain
 
 # Step 6: Asset status → DEPLOYED
-# Step 7: Audit chain updated (EXISTING S.S.O. CODE)
+# Step 7: Audit chain updated (EXISTING R.A.E. CODE)
 ```
 
 ### 2. Enforcement Gate Extensions
 
-Your existing `EnforcementService` gains tokenization-specific checks:
+Your existing R.A.E. `EnforcementService` gains tokenization-specific checks:
 
 ```python
 # In backend/app/services/enforcement.py
@@ -575,12 +575,12 @@ contract RealEstateToken is ERC1155, AccessControl {
     mapping(address => bool) public frozenAddresses;
     mapping(uint256 => uint256) public tokenLockExpiry;
     
-    // Roles (managed by S.S.O.)
+    // Roles (managed by R.A.E.)
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant ISSUER_ROLE = keccak256("ISSUER_ROLE");
     bytes32 public constant COMPLIANCE_ROLE = keccak256("COMPLIANCE_ROLE");
     
-    // Events (S.S.O. listens to these)
+    // Events (R.A.E. listens to these)
     event TokensIssued(address indexed to, uint256 indexed id, uint256 amount);
     event TransferRestricted(address indexed from, address indexed to, string reason);
     event DistributionExecuted(uint256 indexed id, uint256 totalAmount);
@@ -589,7 +589,7 @@ contract RealEstateToken is ERC1155, AccessControl {
         string memory _name,
         string memory _symbol,
         uint256 _totalSupply,
-        address _adminAddress  // S.S.O. platform address
+        address _adminAddress  // R.A.E. platform address
     ) ERC1155("") {
         name = _name;
         symbol = _symbol;
@@ -614,7 +614,7 @@ contract RealEstateToken is ERC1155, AccessControl {
         require(!frozenAddresses[from], "Sender address frozen");
         require(!frozenAddresses[to], "Recipient address frozen");
         
-        // Check 2: Recipient is whitelisted (KYC'd via S.S.O.)
+        // Check 2: Recipient is whitelisted (KYC'd via R.A.E.)
         require(whitelistedInvestors[to], "Recipient not whitelisted");
         
         // Check 3: Tokens not locked
@@ -628,7 +628,7 @@ contract RealEstateToken is ERC1155, AccessControl {
     }
     
     /**
-     * S.S.O. calls this to whitelist investors (after KYC)
+     * R.A.E. calls this to whitelist investors (after KYC)
      */
     function addToWhitelist(address investor) 
         external 
@@ -638,7 +638,7 @@ contract RealEstateToken is ERC1155, AccessControl {
     }
     
     /**
-     * S.S.O. calls this to freeze suspicious addresses
+     * R.A.E. calls this to freeze suspicious addresses
      */
     function freezeAddress(address account) 
         external 
@@ -648,7 +648,7 @@ contract RealEstateToken is ERC1155, AccessControl {
     }
     
     /**
-     * Batch distribution (called by S.S.O. after approval workflow)
+     * Batch distribution (called by R.A.E. after approval workflow)
      */
     function batchPayout(
         address[] calldata recipients,
@@ -686,7 +686,7 @@ class SmartContractDeploymentService:
     1. Loads audited contract bytecode
     2. Configures constructor parameters
     3. Deploys to specified blockchain
-    4. Registers contract address in S.S.O.
+    4. Registers contract address in R.A.E.
     5. Emits audit events
     """
     
@@ -752,7 +752,7 @@ class SmartContractDeploymentService:
             deployment.contract_config.get("name"),
             deployment.contract_config.get("symbol"),
             asset.total_token_supply,
-            os.getenv("SSO_PLATFORM_ADDRESS")  # S.S.O. gets admin role
+            os.getenv("RAE_PLATFORM_ADDRESS")  # R.A.E. gets admin role
         )
         
         # Deploy contract
@@ -1526,10 +1526,10 @@ export const DistributionApprovalQueue: React.FC = () => {
 
 1. **Custody Providers**:
    - Integrate Fireblocks, BitGo, Anchorage
-   - S.S.O. becomes orchestration layer
+   - R.A.E. becomes orchestration layer
 
 2. **Tokenization Platforms**:
-   - White-label S.S.O. for RealBlocks, Stobox
+   - White-label R.A.E. for RealBlocks, Stobox
    - They get governance layer, we get distribution
 
 3. **Traditional Finance**:
@@ -1590,36 +1590,36 @@ export const DistributionApprovalQueue: React.FC = () => {
 
 ---
 
-## Key Differentiators (Why Institutions Choose S.S.O.)
+## Key Differentiators (Why Institutions Choose R.A.E.)
 
 ### 1. **Governed Autonomy**
 - Competitors: Agents propose AND execute
-- S.S.O.: Agents propose, humans approve, system executes
+- R.A.E.: Agents propose, humans approve, system executes
 - Result: Institutions trust the platform because they stay in control
 
 ### 2. **Cryptographic Audit Trail**
 - Competitors: Standard database logs
-- S.S.O.: SHA-256 hash-chained, tamper-evident logs
+- R.A.E.: SHA-256 hash-chained, tamper-evident logs
 - Result: Passes SOC 2 audits, proves compliance to regulators
 
 ### 3. **Enterprise Identity Integration**
 - Competitors: Crypto wallet-first (scary for institutions)
-- S.S.O.: Microsoft Entra ID primary (familiar corporate SSO)
+- R.A.E.: Microsoft Entra ID primary (familiar corporate SSO)
 - Result: CFOs can onboard using existing credentials
 
 ### 4. **Multi-Cloud + Multi-Blockchain**
 - Competitors: Locked to one blockchain (Ethereum or Hedera)
-- S.S.O.: Deploy to any blockchain, integrate any cloud
+- R.A.E.: Deploy to any blockchain, integrate any cloud
 - Result: Works with client's existing infrastructure
 
 ### 5. **Emergency Controls**
 - Competitors: Hope nothing goes wrong
-- S.S.O.: Kill switches, break-glass, circuit breakers
+- R.A.E.: Kill switches, break-glass, circuit breakers
 - Result: CISOs approve because there's a stop button
 
 ### 6. **Platform Economics**
 - Competitors: Per-contract pricing (expensive at scale)
-- S.S.O.: Platform fee + AUM (aligned with client success)
+- R.A.E.: Platform fee + AUM (aligned with client success)
 - Result: Clients save money as they grow
 
 ---
@@ -1656,7 +1656,7 @@ export const DistributionApprovalQueue: React.FC = () => {
 - [ ] Track cost basis for capital gains
 - [ ] Withholding for international investors
 
-**S.S.O. Compliance Automation**:
+**R.A.E. Compliance Automation**:
 - KYC/AML: Automated via Persona/Onfido integration
 - Reporting: Generate filings from audit chain
 - Tax Docs: Auto-generate K-1s, 1099s from distribution events
@@ -1752,7 +1752,7 @@ export const DistributionApprovalQueue: React.FC = () => {
 
 1. **Market Timing**: ARK's $28T projection + institutional FOMO + regulatory clarity
 2. **Platform Economics**: Fat application thesis means your orchestration layer wins
-3. **Technical Moat**: Hash-chained audits + enterprise SSO no one else has
+3. **Technical Moat**: Hash-chained audits + enterprise identity no one else has
 4. **Regulatory Advantage**: NIST AI RMF + SOC 2 = pre-approved by institutions
 5. **Execution Speed**: Pilot in 90 days while competitors are still fundraising
 
@@ -1763,7 +1763,7 @@ export const DistributionApprovalQueue: React.FC = () => {
 - Months 10-12: Raise Series A ($5M-$10M) to scale
 
 **The 2030 Vision**:
-- S.S.O. is the identity + governance layer for $28T tokenized assets
+- R.A.E. is the identity + governance layer for $28T tokenized assets
 - Every AI agent managing portfolios runs through your enforcement gates
 - Every institution tokenizing assets uses your audit chain
 - You captured the platform layer while others fought over smart contracts

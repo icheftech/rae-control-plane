@@ -1,6 +1,6 @@
-# S.S.O. Control Plane - Development Phases
+# R.A.E. Control Plane - Development Phases
 
-**Complete development timeline and phase tracking for the Southern Shade Orchestrator**
+**Complete development timeline and phase tracking for the Runtime Authority Engine**
 
 Last Updated: January 3, 2026
 

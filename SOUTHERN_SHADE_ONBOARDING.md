@@ -22,16 +22,16 @@ This is a **REAL-WORLD ENTERPRISE SYSTEM**, not coursework or a demo. You are bu
 
 ## EXECUTIVE SUMMARY
 
-### What is S.S.O.?
+### What is R.A.E.?
 
-**Southern Shade Orchestrator (S.S.O.)** is a patent-pending platform that enables AI agents to operate across any cloud infrastructure while maintaining cryptographically verifiable audit trails and human control. It delivers "governed autonomy" for regulated industries.
+**Runtime Authority Engine (R.A.E.)** is a patent-pending platform that enables AI agents to operate across any cloud infrastructure while maintaining cryptographically verifiable audit trails and human control. It delivers "governed autonomy" for regulated industries.
 
 **Simple explanation (for non-technical stakeholders):**
-S.S.O. is a control system that lets AI helpers do work across different computer systems (like Amazon, Microsoft, Google clouds) while keeping humans in charge of important decisions and creating permanent records of everything that happens - like a security camera and supervisor combined into one.
+R.A.E. is a control system that lets AI helpers do work across different computer systems (like Amazon, Microsoft, Google clouds) while keeping humans in charge of important decisions and creating permanent records of everything that happens - like a security camera and supervisor combined into one.
 
 ### Business Model
 
-S.S.O. is a **platform and service offering**, NOT a resale product. Revenue streams:
+R.A.E. is a **platform and service offering**, NOT a resale product. Revenue streams:
 
 1. **Professional Services** - Custom implementation and integration
 2. **Managed Services** - 24/7 monitoring, maintenance, optimization
@@ -65,13 +65,13 @@ S.S.O. is a **platform and service offering**, NOT a resale product. Revenue str
 ### 1. First Workflow to Ship
 **DECISION**: Production change management with human-in-the-loop approval
 
-**Why**: This showcases S.S.O.'s core value proposition:
+**Why**: This showcases R.A.E.'s core value proposition:
 - Governed autonomy
 - Human approval gates
 - Full cryptographic audit trails
 - Cross-cloud agent orchestration
 
-**What it does**: An AI agent proposes a change (update record, approve transaction, deploy code), S.S.O. enforces human approval + cryptographic audit before committing.
+**What it does**: An AI agent proposes a change (update record, approve transaction, deploy code), R.A.E. enforces human approval + cryptographic audit before committing.
 
 ### 2. Cloud Platform for Pilot
 **DECISION**: AWS (Amazon Web Services)
@@ -81,7 +81,7 @@ S.S.O. is a **platform and service offering**, NOT a resale product. Revenue str
 - Strong multi-account, private networking patterns
 - HIPAA-eligible services
 - Future GovCloud support
-- Easy S.S.O. central control plane hosting (EKS)
+- Easy R.A.E. central control plane hosting (EKS)
 
 ### 3. Authentication
 **DECISION**: Microsoft Entra ID (formerly Azure AD) as primary
@@ -128,12 +128,12 @@ S.S.O. is a **platform and service offering**, NOT a resale product. Revenue str
 
 ## NIST AI RISK MANAGEMENT FRAMEWORK ALIGNMENT
 
-S.S.O. implements all four NIST AI RMF functions as a closed loop:
+R.A.E. implements all four NIST AI RMF functions as a closed loop:
 
 ### 1. GOVERN
 **What**: Define policies, ownership, and decision authority
 
-**S.S.O. Components**:
+**R.A.E. Components**:
 - `ControlPolicy` model - governance rules
 - `PolicyPack` - signed, versioned policy bundles
 - Risk tier definitions (LOW, MEDIUM, HIGH, CRITICAL)
@@ -142,7 +142,7 @@ S.S.O. implements all four NIST AI RMF functions as a closed loop:
 ### 2. MAP
 **What**: Identify context, capabilities, and risks
 
-**S.S.O. Components**:
+**R.A.E. Components**:
 - `Workflow` model - AI agent task definitions
 - `Capability` model - granular permissions (API calls, DB access, file ops)
 - `Connector` model - external system integrations
@@ -151,7 +151,7 @@ S.S.O. implements all four NIST AI RMF functions as a closed loop:
 ### 3. MEASURE
 **What**: Test, assess, and track performance
 
-**S.S.O. Components**:
+**R.A.E. Components**:
 - `AuditEvent` model - cryptographic event log (SHA-256 hash chain)
 - `GateExecution` model - performance metrics per policy checkpoint
 - OpenTelemetry traces - real-time observability
@@ -160,7 +160,7 @@ S.S.O. implements all four NIST AI RMF functions as a closed loop:
 ### 4. MANAGE
 **What**: Operate, respond to incidents, maintain controls
 
-**S.S.O. Components**:
+**R.A.E. Components**:
 - `EnforcementGate` model - policy checkpoints
 - `KillSwitch` model - emergency stops (GLOBAL, WORKFLOW, CAPABILITY scopes)
 - `BreakGlass` model - time-bounded emergency access
@@ -273,7 +273,7 @@ change_requests - FLAGSHIP: Production change workflow
 ```python
 # AGENT NOTE: Sync these fields from Entra ID to local DB
 # - email, name, groups, roles
-# - Map Entra groups to S.S.O. permissions
+# - Map Entra groups to R.A.E. permissions
 # - Handle group membership changes
 ```
 
@@ -350,7 +350,7 @@ ENTRA_REDIRECT_URI=http://localhost:8000/auth/entra/callback
 **What to build** (`backend/app/workflows/change_management.py`):
 
 ```python
-# AGENT NOTE: This is the FLAGSHIP workflow that showcases S.S.O. value
+# AGENT NOTE: This is the FLAGSHIP workflow that showcases R.A.E. value
 
 class ChangeManagementWorkflow:
     """
@@ -358,7 +358,7 @@ class ChangeManagementWorkflow:
     
     Flow:
     1. Agent proposes change (e.g., update database record)
-    2. S.S.O. creates ChangeRequest
+    2. R.A.E. creates ChangeRequest
     3. Risk assessment (auto-calculated)
     4. Route to approver(s) based on risk level:
        - LOW: Auto-approve if policy allows
@@ -489,8 +489,8 @@ approval_required: false (auto-approve if within guardrails)
 
 ### Clone Repository
 ```bash
-git clone https://github.com/icheftech/sso-control-plane.git
-cd sso-control-plane
+git clone https://github.com/icheftech/rae-control-plane.git
+cd rae-control-plane
 ```
 
 ### Backend Setup
@@ -861,7 +861,7 @@ For questions during development:
 - Business Owner: Leroy
 - AI Assistant: Fredrick
 
-GitHub Repository: https://github.com/icheftech/sso-control-plane
+GitHub Repository: https://github.com/icheftech/rae-control-plane
 
 ---
 

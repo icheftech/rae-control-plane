@@ -1,13 +1,13 @@
-# S.S.O. Control Plane - Quickstart Guide
+# R.A.E. Control Plane - Quickstart Guide
 
-**Get your language model running with S.S.O. in 5 minutes**
+**Get your language model running with R.A.E. in 5 minutes**
 
 ## Overview
 
 This guide will help you:
 1. Set up your local environment
 2. Configure Groq (free tier) as your LLM provider
-3. Start the S.S.O. backend
+3. Start the R.A.E. backend
 4. Test your first LLM call through the governance layer
 
 ## Prerequisites
@@ -21,8 +21,8 @@ This guide will help you:
 
 ```bash
 # Clone the repository
-git clone https://github.com/icheftech/sso-control-plane.git
-cd sso-control-plane
+git clone https://github.com/icheftech/rae-control-plane.git
+cd rae-control-plane
 
 # Install Python dependencies
 pip install -r requirements.txt
@@ -68,10 +68,10 @@ If you have PostgreSQL installed locally:
 
 ```bash
 # Create the database
-createdb sso_control_plane
+createdb rae_control_plane
 
 # Update .env with your local connection
-DATABASE_URL=postgresql://your_user:your_password@localhost:5432/sso_control_plane
+DATABASE_URL=postgresql://your_user:your_password@localhost:5432/rae_control_plane
 ```
 
 ## Step 4: Initialize Database
@@ -96,7 +96,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 You should see:
 ```
-🚀 S.S.O. Control Plane starting up...
+🚀 R.A.E. Control Plane starting up...
 ✅ Database connection successful
 INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
@@ -164,7 +164,7 @@ Expected response:
 ✅ **ModelProvider**: Your backend now has a unified interface to call Groq (or any OpenAI-compatible API)  
 ✅ **Governance Layer**: Every LLM call is tagged with `tenant_id` and `workflow_id` for audit trails  
 ✅ **Zero Cost**: You're using Groq's free tier (14.4k requests/day, ~1M tokens)  
-✅ **Plug-and-Play**: The Southern Shade website and S.S.O. agents can now call `/v1/chat/completions`
+✅ **Plug-and-Play**: The Southern Shade website and R.A.E. agents can now call `/v1/chat/completions`
 
 ## Next Steps
 
@@ -173,7 +173,7 @@ Expected response:
 In your website repo, add an API client:
 
 ```javascript
-// website/lib/sso-client.ts
+// website/lib/rae-client.ts
 export async function askAssistant(question: string) {
   const response = await fetch('http://localhost:8000/v1/chat/completions', {
     method: 'POST',
@@ -193,7 +193,7 @@ export async function askAssistant(question: string) {
 }
 ```
 
-### For S.S.O. Agents
+### For R.A.E. Agents
 
 See `SOUTHERN_SHADE_ONBOARDING.md` for how to build:
 - Sourcing & bidding agents
@@ -244,6 +244,6 @@ uvicorn app.main:app --reload --port 8001
 
 ---
 
-**You're now running S.S.O. with a language model!** 🎉
+**You're now running R.A.E. with a language model!** 🎉
 
 For production deployment, see `AGENT_NOTES.md` for full governance setup.

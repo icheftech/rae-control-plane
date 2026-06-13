@@ -628,7 +628,7 @@ class ChangeRequestService:
     """
     Flagship workflow: Governed production changes.
     
-    This showcases S.S.O.'s core value:
+    This showcases R.A.E.'s core value:
     - AI agents propose changes
     - Humans approve based on risk
     - Cryptographic audit trail
