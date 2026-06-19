@@ -85,7 +85,7 @@ export default function HomePage() {
             Business Deal Evaluator
           </h2>
           <p className="text-gray-600 mb-4">
-            Paste a BizBuySell listing URL to score the deal — multiples, DSCR, payback period, and an A–F grade.
+            Enter a listing's financials to score the deal — multiples, DSCR, payback period, and an A–F grade.
           </p>
           <a
             href="/business-eval"

@@ -7,18 +7,6 @@ import axios from 'axios';
 // Types
 // ---------------------------------------------------------------------------
 
-interface ScrapedListing {
-  success: boolean;
-  error?: string;
-  title?: string;
-  asking_price?: number;
-  revenue?: number;
-  cash_flow?: number;
-  location?: string;
-  industry?: string;
-  description?: string;
-}
-
 interface ScoreBreakdown {
   cf_multiple_pts: number;
   cf_multiple_max: number;
@@ -158,11 +146,6 @@ function ScoreBar({ pts, max, label }: { pts: number; max: number; label: string
 // ---------------------------------------------------------------------------
 
 export default function BusinessEvalPage() {
-  const [url, setUrl] = useState('');
-  const [scraping, setScraping] = useState(false);
-  const [scrapeMsg, setScrapeMsg] = useState('');
-
-  const [title, setTitle] = useState('');
   const [askingPrice, setAskingPrice] = useState('');
   const [revenue, setRevenue] = useState('');
   const [cashFlow, setCashFlow] = useState('');
@@ -177,36 +160,6 @@ export default function BusinessEvalPage() {
   const [calculating, setCalculating] = useState(false);
   const [results, setResults] = useState<DealMetrics | null>(null);
   const [calcError, setCalcError] = useState('');
-
-  // Fetch listing from URL
-  const handleFetch = useCallback(async () => {
-    if (!url.trim()) return;
-    setScraping(true);
-    setScrapeMsg('');
-    setResults(null);
-
-    try {
-      const { data } = await axios.post<ScrapedListing>(`${API_BASE}/business-eval/scrape`, { url });
-
-      if (data.title) setTitle(data.title);
-      if (data.asking_price) setAskingPrice(String(data.asking_price));
-      if (data.revenue) setRevenue(String(data.revenue));
-      if (data.cash_flow) setCashFlow(String(data.cash_flow));
-      if (data.industry) setIndustry(data.industry);
-
-      if (data.error) {
-        setScrapeMsg(data.error);
-      } else if (!data.asking_price && !data.revenue && !data.cash_flow) {
-        setScrapeMsg('No financial data found — please enter values manually.');
-      } else {
-        setScrapeMsg('Listing data loaded. Review the fields below and click Calculate.');
-      }
-    } catch {
-      setScrapeMsg('Could not reach the server. Enter values manually.');
-    } finally {
-      setScraping(false);
-    }
-  }, [url]);
 
   // Calculate
   const handleCalculate = useCallback(async () => {
@@ -245,10 +198,10 @@ export default function BusinessEvalPage() {
   }, [askingPrice, revenue, cashFlow, industry, financingType, rate, term, downPct, sellerFinancing, additionalExpenses]);
 
   const handleClear = () => {
-    setUrl(''); setTitle(''); setAskingPrice(''); setRevenue(''); setCashFlow('');
+    setAskingPrice(''); setRevenue(''); setCashFlow('');
     setIndustry('General'); setFinancingType('SBA'); setRate('10.0'); setTerm('10');
     setDownPct('10'); setSellerFinancing('0'); setAdditionalExpenses('0');
-    setResults(null); setScrapeMsg(''); setCalcError('');
+    setResults(null); setCalcError('');
   };
 
   // -------------------------------------------------------------------------
@@ -273,7 +226,7 @@ export default function BusinessEvalPage() {
         </div>
         <div>
           <div style={{ color: '#fff', fontWeight: 700, fontSize: 18 }}>Business Deal Evaluator</div>
-          <div style={{ color: '#93c5fd', fontSize: 12 }}>Paste a BizBuySell URL or enter values manually</div>
+          <div style={{ color: '#93c5fd', fontSize: 12 }}>Enter the listing's financials to score the deal</div>
         </div>
         <div style={{ marginLeft: 'auto' }}>
           <a href="/" style={{ color: '#93c5fd', fontSize: 13, textDecoration: 'none' }}>← SSO Dashboard</a>
@@ -281,44 +234,6 @@ export default function BusinessEvalPage() {
       </div>
 
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '24px 16px' }}>
-
-        {/* URL fetch */}
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: 20, marginBottom: 20 }}>
-          <label style={{ ...labelStyle, fontSize: 14 }}>BizBuySell Listing URL</label>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <input
-              style={{ ...inputStyle, flex: 1 }}
-              value={url}
-              onChange={e => setUrl(e.target.value)}
-              placeholder="https://www.bizbuysell.com/business-opportunity/..."
-              onKeyDown={e => e.key === 'Enter' && handleFetch()}
-            />
-            <button
-              onClick={handleFetch}
-              disabled={scraping || !url.trim()}
-              style={{
-                padding: '10px 20px', background: scraping || !url.trim() ? '#93c5fd' : '#2563eb',
-                color: '#fff', border: 'none', borderRadius: 8, cursor: scraping || !url.trim() ? 'not-allowed' : 'pointer',
-                fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap',
-              }}
-            >
-              {scraping ? 'Fetching…' : 'Fetch Listing'}
-            </button>
-          </div>
-          {scrapeMsg && (
-            <div style={{
-              marginTop: 10, padding: '10px 14px', borderRadius: 8, fontSize: 13,
-              background: scrapeMsg.includes('loaded') ? '#f0fdf4' : '#fffbeb',
-              color: scrapeMsg.includes('loaded') ? '#166534' : '#92400e',
-              border: `1px solid ${scrapeMsg.includes('loaded') ? '#bbf7d0' : '#fde68a'}`,
-            }}>
-              {scrapeMsg}
-            </div>
-          )}
-          {title && (
-            <div style={{ marginTop: 10, fontWeight: 600, color: '#1e3a5f', fontSize: 15 }}>{title}</div>
-          )}
-        </div>
 
         {/* Form */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>

@@ -1,9 +1,7 @@
 """Business Deal Evaluator API endpoints."""
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, HttpUrl
 
-from app.services.bizbuysell_scraper import ScrapedListing, scrape_bizbuysell_listing
 from app.services.business_evaluator import (
     CalculateRequest,
     DealMetrics,
@@ -14,26 +12,10 @@ from app.services.business_evaluator import (
 router = APIRouter(prefix="/business-eval", tags=["Business Evaluator"])
 
 
-class ScrapeRequest(BaseModel):
-    url: str
-
-
 @router.get("/industries")
 async def list_industries() -> list[str]:
     """Return supported industry names for benchmarking."""
     return INDUSTRIES
-
-
-@router.post("/scrape", response_model=ScrapedListing)
-async def scrape_listing(body: ScrapeRequest) -> ScrapedListing:
-    """Scrape financial data from a BizBuySell listing URL.
-
-    Returns best-effort results. Fields may be None if not found.
-    Always check `success` and `error` fields.
-    """
-    if not body.url.startswith("http"):
-        raise HTTPException(status_code=422, detail="URL must start with http:// or https://")
-    return await scrape_bizbuysell_listing(body.url)
 
 
 @router.post("/calculate", response_model=DealMetrics)
