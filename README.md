@@ -40,6 +40,7 @@ All data endpoints require `Authorization: Bearer <key>`. Health is public.
 - `/api/control-policies`
 - `/api/kill-switches`
 - `/api/change-requests`
+- `/api/orchestrations/runs`
 - `/api/audit-events` and `/api/audit-events/verify`
 - `/api/tenants/` (organization directory only)
 - `/v1/chat/completions`
@@ -51,6 +52,33 @@ Registry lists return arrays; request bodies use the model fields documented by 
 Configure `LLM_API_KEY`, `LLM_BASE_URL`, and `LLM_MODEL`. Register a workflow and create an allow policy for its intended model. Send a `workflow_id` and `messages` to `/v1/chat/completions`. There is no unauthenticated execution mode.
 
 Conditions use exact equality on `model`, `workflow_id`, and `operation` (`chat_completion`). All standard conditions must match; any matching auto-deny condition blocks. Any applicable deny, review, or degrade policy overrides allow. All active stop modes block new model calls. No policies means no execution. Prompt and response text are not stored in the audit trail.
+
+### Orchestration
+
+`POST /api/orchestrations/runs` executes a registered workflow as ordered steps. The first runtime supports:
+
+- `set_context`: copies a literal value or input value into the run context.
+- `llm_chat`: renders message templates from context, checks policies and kill switches, calls the configured OpenAI-compatible model provider, and records redacted audit events.
+
+Example request:
+
+```json
+{
+  "workflow_id": "00000000-0000-0000-0000-000000000000",
+  "inputs": { "goal": "check personal Gmail safely" },
+  "steps": [
+    { "id": "capture_goal", "type": "set_context", "input_key": "goal", "output_key": "task" },
+    {
+      "id": "plan",
+      "type": "llm_chat",
+      "output_key": "plan",
+      "messages": [{ "role": "user", "content": "Plan this workflow: {{task}}" }]
+    }
+  ]
+}
+```
+
+Audit records include run ids, step ids, model names, decisions, and token usage. Prompt and response content stay out of the audit trail.
 
 ### Change review
 
@@ -96,7 +124,7 @@ This small demo agent submits a synthetic incident for investigation advice. It 
 
 The script verifies default denial, permits one workflow/model combination, obtains a real model response, activates a workflow-scoped emergency stop, checks that another request is denied, and verifies the audit chain. It releases the stop and deactivates its demo workflow/policy afterward. Audit records remain visible in the console; the result is saved in `local-agent-test-results.json`.
 
-This does not reconfigure the running server or govern other agents automatically. An external agent must route its calls through R.A.E. to be governed.
+This does not reconfigure the running server or govern other agents automatically. An external agent must route its calls through R.A.E.'s model gateway or orchestration endpoint to be governed.
 
 The local demo sets `LLM_TIMEOUT_SECONDS=180` and `LLM_REASONING_EFFORT=none` for its process only. The normal provider timeout remains 60 seconds. Reasoning control follows [Ollama’s OpenAI compatibility documentation](https://docs.ollama.com/api/openai-compatibility).
 

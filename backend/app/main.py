@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import IntegrityError
 from app.db.database import check_db_connection, engine
 from app.security import current_actor, Actor
-from app.api import registry, tenants, llm, audit, change_requests
+from app.api import registry, tenants, llm, audit, change_requests, orchestrations
 from app.services import model_provider
 
 @asynccontextmanager
@@ -23,6 +23,7 @@ app.include_router(registry.router, prefix='/api')
 app.include_router(tenants.router, prefix='/api', dependencies=[Depends(current_actor)])
 app.include_router(change_requests.router, prefix='/api')
 app.include_router(audit.router, prefix='/api')
+app.include_router(orchestrations.router)
 app.include_router(llm.router)
 @app.get('/api/me')
 def me(actor: Actor=Depends(current_actor)):
