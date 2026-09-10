@@ -10,6 +10,7 @@ from app.db.database import get_db
 from app.services.model_provider import get_model_provider, ModelProvider
 from app.services.governance import evaluate
 from app.services.audit import append_event
+from app.services.run_history import RunHistory, safe_usage
 router = APIRouter(prefix='/v1', tags=['llm'])
 class Message(Strict):
     role: Literal['system','user','assistant']
@@ -23,9 +24,18 @@ class ChatCompletionRequest(Strict):
 
 @router.post('/chat/completions')
 async def create_chat_completion(request: ChatCompletionRequest, actor: Actor=Depends(operator), db: Session=Depends(get_db), provider: ModelProvider=Depends(get_model_provider)):
+    with RunHistory(db, actor, request.workflow_id, 1, source='chat_completion') as history:
+        with history.step(0, 'chat_completion', 'llm_chat', request.model or provider.default_model) as event:
+            result = await execute_chat(request, actor, db, provider, str(history.run.id))
+            event.token_usage = safe_usage(result.get('usage', {}))
+            result.setdefault('audit_metadata', {})['run_id'] = str(history.run.id)
+            return result
+
+
+async def execute_chat(request, actor, db, provider, run_id):
     model = request.model or provider.default_model
     allowed, reason = evaluate(db, request.workflow_id, model)
-    context = {'workflow_id': str(request.workflow_id), 'model':model, 'reason':reason}
+    context = {'workflow_id': str(request.workflow_id), 'model':model, 'reason':reason, 'run_id':run_id}
     append_event(db, actor, 'LLM_ALLOWED' if allowed else 'LLM_BLOCKED', outcome='SUCCESS' if allowed else 'BLOCKED', context=context)
     db.commit()  # A durable preflight record is required before any external call.
     if not allowed: raise HTTPException(403, reason)
@@ -36,7 +46,7 @@ async def create_chat_completion(request: ChatCompletionRequest, actor: Actor=De
         append_event(db, actor, 'LLM_FAILED', outcome='ERROR', context=context)
         db.commit()
         raise HTTPException(502, 'Model provider request failed')
-    event = append_event(db, actor, 'LLM_COMPLETED', context={**context, 'usage':result.get('usage',{})})
+    event = append_event(db, actor, 'LLM_COMPLETED', context={**context, 'usage':safe_usage(result.get('usage',{}))})
     db.commit()
     result['audit_metadata']['event_id'] = str(event.id)
     return result

@@ -14,4 +14,4 @@ import sys
 sys.path.insert(0, str(root/'backend'))
 os.chdir(root/'backend')
 command.upgrade(Config('alembic.ini'),'head')
-uvicorn.run('app.main:app', host='127.0.0.1',port=18000)
+uvicorn.run('app.main:app', host='127.0.0.1',port=18000, access_log=False)

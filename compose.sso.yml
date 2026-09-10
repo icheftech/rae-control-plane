@@ -1,0 +1,11 @@
+services:
+  sst-sso:
+    image: quay.io/keycloak/keycloak:26.7.3
+    command: ["start-dev", "--import-realm"]
+    ports: ["127.0.0.1:18080:8080"]
+    env_file: ./local-state/sso.env
+    volumes:
+      - ./local-state/sso-import:/opt/keycloak/data/import:ro
+      - sst-sso-data:/opt/keycloak/data
+volumes:
+  sst-sso-data:

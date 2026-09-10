@@ -1,12 +1,13 @@
 export type Row = Record<string, any> & { id: string; name?: string; title?: string };
 
-const baseUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:18000';
+export const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:18000';
 
 export async function request<T>(path: string, token: string, method = 'GET', body?: unknown): Promise<T> {
   const response = await fetch(`${baseUrl.replace(/\/$/, '')}/api/${path.replace(/^\//, '')}`, {
     method,
+    credentials: 'include',
     headers: {
-      Authorization: `Bearer ${token}`,
+      ...(token ? {Authorization: `Bearer ${token}`} : {}),
       'Content-Type': 'application/json',
     },
     body: body === undefined ? undefined : JSON.stringify(body),

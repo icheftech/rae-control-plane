@@ -9,6 +9,9 @@ from app.db.database import check_db_connection, engine
 from app.security import current_actor, Actor
 from app.api import registry, tenants, llm, audit, change_requests, orchestrations
 from app.services import model_provider
+from app.services.telemetry import RequestTelemetry
+from app.api import sso
+from starlette.middleware.sessions import SessionMiddleware
 
 @asynccontextmanager
 async def lifespan(app):
@@ -18,7 +21,13 @@ async def lifespan(app):
         model_provider._provider_instance = None
     engine.dispose()
 app = FastAPI(title='R.A.E. Control Plane', version='0.2.0', lifespan=lifespan, docs_url='/api/docs')
-app.add_middleware(CORSMiddleware, allow_origins=os.getenv('ALLOWED_ORIGINS','http://localhost:3000').split(','), allow_methods=['GET','POST','PUT','PATCH','DELETE'], allow_headers=['Authorization','Content-Type'])
+app.add_middleware(RequestTelemetry)
+if os.getenv('RAE_SESSION_SECRET'):
+    app.add_middleware(SessionMiddleware, secret_key=os.environ['RAE_SESSION_SECRET'],
+                       session_cookie='rae_oidc_state', max_age=600,
+                       https_only=os.getenv('RAE_COOKIE_SECURE', 'true') == 'true')
+app.include_router(sso.router)
+app.add_middleware(CORSMiddleware, allow_origins=os.getenv('ALLOWED_ORIGINS','http://localhost:3000').split(','), allow_methods=['GET','POST','PUT','PATCH','DELETE'], allow_headers=['Authorization','Content-Type'], allow_credentials=True, expose_headers=["X-Request-ID","X-Run-ID"])
 app.include_router(registry.router, prefix='/api')
 app.include_router(tenants.router, prefix='/api', dependencies=[Depends(current_actor)])
 app.include_router(change_requests.router, prefix='/api')

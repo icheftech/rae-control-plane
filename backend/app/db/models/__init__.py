@@ -26,6 +26,8 @@ Usage:
 
 # Base class for all models
 from app.db.base import Base
+from .orchestration_run import OrchestrationRun, OrchestrationRunEvent
+from .browser_session import BrowserSession
 
 # Phase 1: Registry Backbone (MAP)
 from .workflow import Workflow, WorkflowStatus, RiskLevel as WorkflowRiskLevel

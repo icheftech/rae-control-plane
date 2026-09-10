@@ -87,6 +87,9 @@ def client(test_db, monkeypatch):
     def override_get_db():
         yield test_db
 
+    from app.services.rate_limit import _buckets
+    _buckets.clear()
+
     monkeypatch.setenv("RAE_API_KEYS", '{"test-key":{"name":"test-harness","role":"admin"},"review-key":{"name":"reviewer","role":"admin"},"approve-key":{"name":"approver","role":"admin"},"viewer-key":{"name":"viewer","role":"viewer"}}')
     fastapi_app.dependency_overrides[get_db] = override_get_db
     with TestClient(fastapi_app, headers={"Authorization":"Bearer test-key"}) as test_client:

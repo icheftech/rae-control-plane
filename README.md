@@ -4,6 +4,9 @@ A local, single-installation AI governance prototype built with FastAPI, Postgre
 
 ## Working features
 
+- Southern Shade local SSO and content-free orchestration timelines: [setup and boundaries](docs/local-sso-and-run-history.md).
+- Structured request/step telemetry, per-actor local rate limits, and optional hashed service keys with expiry/revocation.
+
 - Authenticated operator console with administrator, operator, and viewer API keys.
 - Workflow registry and API-level capability/connector registration.
 - Global and workflow-scoped policies and emergency stops.

@@ -14,6 +14,7 @@ from app.security import Actor
 from app.services.audit import append_event
 from app.services.governance import evaluate
 from app.services.model_provider import ModelProvider
+from app.services.run_history import RunHistory, safe_usage
 
 
 class OrchestrationMessage(BaseModel):
@@ -73,11 +74,15 @@ class OrchestrationRunner:
         self.provider = provider
 
     async def run(self, request: OrchestrationRunRequest) -> RunResult:
+        with RunHistory(self.db, self.actor, request.workflow_id, len(request.steps)) as history:
+            return await self._execute(request, history)
+
+    async def _execute(self, request: OrchestrationRunRequest, history: RunHistory) -> RunResult:
         workflow = self.db.get(Workflow, request.workflow_id)
         if workflow is None or not workflow.is_active:
             raise HTTPException(404, "Workflow is missing or inactive")
 
-        run_id = str(uuid4())
+        run_id = str(history.run.id)
         context = dict(request.inputs)
         step_results: list[StepResult] = []
         append_event(
@@ -90,9 +95,12 @@ class OrchestrationRunner:
         self.db.commit()
 
         try:
-            for step in request.steps:
-                result = await self._run_step(workflow, run_id, context, step)
-                step_results.append(result)
+            for position, step in enumerate(request.steps):
+                model = (step.model or self.provider.default_model) if step.type == 'llm_chat' else None
+                with history.step(position, step.id, step.type, model) as event:
+                    result = await self._run_step(workflow, run_id, context, step)
+                    event.token_usage = safe_usage(result.usage)
+                    step_results.append(result)
         except HTTPException as exc:
             append_event(
                 self.db,
@@ -205,7 +213,7 @@ class OrchestrationRunner:
             self.actor,
             "ORCHESTRATION_STEP_COMPLETED",
             resource=workflow,
-            context={**audit_context, "usage": result.get("usage", {})},
+            context={**audit_context, "usage": safe_usage(result.get("usage", {}))},
         )
         self.db.commit()
         return StepResult(
