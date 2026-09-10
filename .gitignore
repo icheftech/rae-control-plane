@@ -213,6 +213,7 @@ __marimo__/
 node_modules/
 .next/
 frontend/.next/
+*.tsbuildinfo
 
 # Saved env backups
 *.env.save
