@@ -78,7 +78,7 @@ def main():
                 'reason':'Verify that emergency controls override an allow policy'}, expected=201)
             call('POST',f"/api/kill-switches/{stop['id']}/activate",{'reason':'Local smoke test'})
             blocked = call('POST','/v1/chat/completions',request,expected=403,agent=True)
-            if blocked['detail'] != 'Emergency stop is active':
+            if blocked['detail'] != f"Emergency stop is active: {stop['id']}":
                 raise RuntimeError('Request was blocked for an unexpected reason')
             results['checks'].append({'check':'emergency stop','result':'PASS','detail':blocked['detail']})
             print('PASS: emergency stop blocked the next request', flush=True)

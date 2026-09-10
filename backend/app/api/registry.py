@@ -8,6 +8,7 @@ from app.db.database import get_db
 from app.db.models import Workflow, Capability, Connector, ControlPolicy, KillSwitch
 from app.security import Actor, current_actor, admin, operator
 from app.services.audit import append_event
+from app.services.tenancy import scoped, own, require_owned
 from app.api.schemas import WorkflowCreate, WorkflowUpdate, CapabilityCreate, ConnectorCreate, PolicyCreate, SwitchCreate, SwitchAction
 router = APIRouter(dependencies=[Depends(current_actor)])
 
@@ -15,11 +16,10 @@ def serialize(obj):
     return jsonable_encoder({a.key: getattr(obj, a.key) for a in inspect(type(obj)).column_attrs})
 
 def require(db, model, id):
-    obj = db.get(model, id)
-    if obj is None: raise HTTPException(404, 'Resource not found')
-    return obj
+    return require_owned(db, model, id)
 
 def save(db, actor, obj, action):
+    own(db, actor, obj)
     db.add(obj)
     db.flush()
     append_event(db, actor, action, obj)
@@ -29,7 +29,7 @@ def save(db, actor, obj, action):
 
 def add_reads(path, model):
     def listing(skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=500), db: Session = Depends(get_db)):
-        return [serialize(x) for x in db.scalars(select(model).order_by(model.created_at.desc()).offset(skip).limit(limit))]
+        return [serialize(x) for x in db.scalars(scoped(db, model).order_by(model.created_at.desc()).offset(skip).limit(limit))]
     def detail(id: UUID, db: Session = Depends(get_db)):
         return serialize(require(db, model, id))
     router.add_api_route(path, listing, methods=['GET'], name='list_' + model.__tablename__)

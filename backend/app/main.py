@@ -36,7 +36,7 @@ app.include_router(orchestrations.router)
 app.include_router(llm.router)
 @app.get('/api/me')
 def me(actor: Actor=Depends(current_actor)):
-    return {'name':actor.name, 'role':actor.role}
+    return {'name':actor.name, 'role':actor.role, 'tenant_id':str(actor.tenant_id)}
 @app.get('/health')
 def health():
     healthy = check_db_connection()

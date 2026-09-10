@@ -5,10 +5,17 @@ from app.db.models.audit_event import AuditEvent
 from app.services.telemetry import request_id
 
 def append_event(db, actor, action, resource=None, outcome='SUCCESS', context=None):
+    context = dict(context or {})
+    context['tenant_id'] = str(actor.tenant_id or db.info.get('tenant_id'))
+    if db.info.get('execution'):
+        context['context_id'] = str(db.info['execution']['context_id'])
+    if db.info.get('policy_snapshot_id'):
+        context['policy_snapshot_id'] = str(db.info['policy_snapshot_id'])
     # Serialize writers across API workers; the lock is released at transaction end.
     db.execute(text('SELECT pg_advisory_xact_lock(72401391)'))
     previous = db.execute(select(AuditEvent).order_by(AuditEvent.sequence_number.desc()).limit(1)).scalar_one_or_none()
     event = AuditEvent(
+        tenant_id=actor.tenant_id or (getattr(resource, 'tenant_id', None) if resource else None) or db.info.get('tenant_id'),
         sequence_number=previous.sequence_number + 1 if previous else 1,
         previous_hash=previous.event_hash if previous else None,
         event_type=action, action=action, actor_id=actor.id, actor_type='USER' if actor.subject else 'API_KEY',

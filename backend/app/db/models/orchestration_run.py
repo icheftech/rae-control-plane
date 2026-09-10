@@ -17,6 +17,7 @@ class OrchestrationRun(Base):
     source = Column(String(30), nullable=False)
     request_id = Column(String(36), nullable=False)
     actor_id = Column(UUID(as_uuid=True), nullable=False)
+    context_id = Column(UUID(as_uuid=True), ForeignKey('execution_contexts.id'))
     status = Column(String(20), nullable=False, default="pending")
     started_at = Column(DateTime(timezone=True), nullable=False, default=now)
     completed_at = Column(DateTime(timezone=True))

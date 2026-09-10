@@ -8,7 +8,7 @@ Requires Docker Desktop to be running before pytest is invoked.
 """
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import Session
 
 from testcontainers.postgres import PostgresContainer
@@ -102,9 +102,10 @@ def client(test_db, monkeypatch):
 # ---------------------------------------------------------------------------
 
 @pytest.fixture
-def sample_workflow_data():
+def sample_workflow_data(test_db):
     """Sample workflow for testing."""
     return {
+        "tenant_id": test_db.scalar(text("SELECT id FROM tenants WHERE tenant_key='southern_shade_technologies'")),
         "name": "test-workflow",
         "description": "Test workflow for unit tests",
         "version": "1.0.0",

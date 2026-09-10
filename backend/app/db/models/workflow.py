@@ -3,7 +3,7 @@
 NIST AI RMF MAP function: Catalog high-risk AI workflows
 Enterprise-grade model for PHI/PII regulated environments
 """
-from sqlalchemy import Column, String, DateTime, Boolean, Text, Enum as SQLEnum, UniqueConstraint
+from sqlalchemy import Column, String, DateTime, Boolean, Text, Enum as SQLEnum, UniqueConstraint, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -38,6 +38,7 @@ class Workflow(Base):
 
     # Primary identity
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey('tenants.id'), nullable=False, index=True)
     workflow_key = Column(String(255), unique=True, nullable=True, index=True)
 
     # Descriptive metadata
@@ -71,7 +72,7 @@ class Workflow(Base):
     change_requests = relationship("ChangeRequest", back_populates="workflow")
 
     __table_args__ = (
-        UniqueConstraint("name", "version", name="uq_workflow_name_version"),
+        UniqueConstraint("tenant_id", "name", "version", name="uq_workflow_name_version"),
     )
 
     def __init__(self, **kwargs):

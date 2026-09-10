@@ -14,6 +14,7 @@ from app.db.database import get_db
 from app.db.models.tenant import Tenant
 from pydantic import BaseModel, Field
 from datetime import datetime
+from app.services.tenancy import tenant_id as current_tenant_id
 
 router = APIRouter(
     prefix="/tenants",
@@ -60,20 +61,7 @@ async def create_tenant(
     actor: Actor = Depends(admin)
 ):
     """Create a new tenant organization."""
-    existing = db.query(Tenant).filter(Tenant.tenant_key == tenant.tenant_key).first()
-    if existing:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Tenant with key '{tenant.tenant_key}' already exists"
-        )
-
-    db_tenant = Tenant(**{**tenant.model_dump(), "created_by": actor.name})
-    db.add(db_tenant)
-    db.flush()
-    append_event(db, actor, "TENANT_CREATED", db_tenant)
-    db.commit()
-    db.refresh(db_tenant)
-    return db_tenant
+    raise HTTPException(403, 'Tenant provisioning requires an installation administrator outside this API')
 
 @router.get("/", response_model=List[TenantResponse])
 async def list_tenants(
@@ -82,7 +70,7 @@ async def list_tenants(
     db: Session = Depends(get_db)
 ):
     """List all tenant organizations."""
-    tenants = db.query(Tenant).offset(skip).limit(limit).all()
+    tenants = db.query(Tenant).filter(Tenant.id == current_tenant_id(db)).offset(skip).limit(limit).all()
     return tenants
 
 @router.get("/{tenant_id}", response_model=TenantResponse)
@@ -91,7 +79,7 @@ async def get_tenant(
     db: Session = Depends(get_db)
 ):
     """Get a specific tenant by ID."""
-    tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
+    tenant = db.query(Tenant).filter(Tenant.id == tenant_id, Tenant.id == current_tenant_id(db)).first()
     if not tenant:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -107,7 +95,7 @@ async def update_tenant(
     actor: Actor = Depends(admin)
 ):
     """Update a tenant organization."""
-    tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
+    tenant = db.query(Tenant).filter(Tenant.id == tenant_id, Tenant.id == current_tenant_id(db)).first()
     if not tenant:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -115,6 +103,8 @@ async def update_tenant(
         )
 
     update_data = tenant_update.model_dump(exclude_unset=True)
+    if 'tenant_key' in update_data:
+        raise HTTPException(422, 'Tenant key is immutable')
     for field, value in update_data.items():
         setattr(tenant, field, value)
 
@@ -130,7 +120,7 @@ async def delete_tenant(
     actor: Actor = Depends(admin)
 ):
     """Delete a tenant organization."""
-    tenant = db.query(Tenant).filter(Tenant.id == tenant_id).first()
+    tenant = db.query(Tenant).filter(Tenant.id == tenant_id, Tenant.id == current_tenant_id(db)).first()
     if not tenant:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -138,6 +128,6 @@ async def delete_tenant(
         )
 
     append_event(db, actor, "TENANT_DELETED", tenant)
-    db.delete(tenant)
+    tenant.is_active = False
     db.commit()
     return None

@@ -45,7 +45,7 @@ All data endpoints require `Authorization: Bearer <key>`. Health is public.
 - `/api/change-requests`
 - `/api/orchestrations/runs`
 - `/api/audit-events` and `/api/audit-events/verify`
-- `/api/tenants/` (organization directory only)
+- `/api/tenants/` (current tenant administration; provisioning is installation-managed)
 - `/v1/chat/completions`
 
 Registry lists return arrays; request bodies use the model fields documented by OpenAPI. This replaces the disconnected `/api/v1/registry/*` frontend contract in the original archive.
@@ -107,11 +107,13 @@ npm run build
 
 ## Scope and limitations
 
-This is a prototype, not a compliance certification or a production security boundary. Entra federation, tenant data isolation, break-glass execution, automatic rollback, and in-flight model cancellation are not implemented. Tenant records are an organization directory within one installation, not isolated customer accounts.
+This is a local prototype, not a compliance certification. Registry resources, policies, emergency stops, change requests, audit queries and runs now enforce tenant ownership in API queries. Database constraints reject cross-tenant links between existing owned resources. Southern Shade Technologies owns the migrated installation data. Local Keycloak sign-in remains configured for this installation tenant; customer enrollment and multiple SSO providers are not implemented.
 
 Audit events are append-only through the API and hash-linked, but database administrators can alter records or rewrite the chain. External anchoring, database-level immutable retention, and tamper alerts remain future work. The execution gate is a preflight check, not continuous enforcement of a request already sent to a provider.
 
-Keep this build local. Before deployment, complete identity federation, secret management, dependency hardening, rate limiting, tenant isolation, and operational monitoring appropriate to the intended environment. Connector config must contain non-secret values or secret references, never credentials.
+New runs record immutable execution identity, causal events and the policy inputs evaluated at each model decision. Database triggers reject updates/deletes to this evidence, but privileged database administrators can remove those protections. Resource scope currently identifies the workflow, not individual files, patients or email messages. See [execution evidence](docs/execution-evidence.md) for precise guarantees and limitations.
+
+Keep this build local. Production identity hosting, secret management, dependency hardening, distributed rate limiting and operational monitoring remain work. Break-glass execution, automatic rollback and in-flight model cancellation are not implemented. Connector config must contain non-secret values or secret references, never credentials.
 
 Earlier roadmap, strategy, and handoff documents describe planned or historical behavior; this README documents the implemented v0.2 surface.
 

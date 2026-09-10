@@ -78,6 +78,6 @@ with SessionLocal() as db:
                         created_by='local-provisioner', settings={'deployment': 'single-tenant'})
         db.add(tenant)
         db.flush()
-        append_event(db, Actor('local-provisioner', 'admin'), 'TENANT_CREATED', tenant)
+        append_event(db, Actor('local-provisioner', 'admin', tenant_id=tenant.id), 'TENANT_CREATED', tenant)
         db.commit()
 print('Southern Shade organization provisioned. Local credentials: local-state/SSO_ACCESS.txt')

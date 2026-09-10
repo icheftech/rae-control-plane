@@ -10,6 +10,8 @@ from app.db.database import get_db
 from app.db.models.browser_session import BrowserSession
 from app.db.models.tenant import Tenant
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy import select
+from app.services.tenancy import DEFAULT_TENANT_KEY
 
 bearer = HTTPBearer(auto_error=False)
 @dataclass(frozen=True)
@@ -17,9 +19,21 @@ class Actor:
     name: str
     role: str
     subject: str | None = None
+    tenant_id: UUID | None = None
     @property
     def id(self) -> UUID:
+        return uuid5(NAMESPACE_URL, 'rae:actor:' + str(self.tenant_id) + ':' + (self.subject or self.name))
+
+    @property
+    def legacy_id(self) -> UUID:
         return uuid5(NAMESPACE_URL, 'rae:actor:' + (self.subject or self.name))
+
+
+def bind_actor(db, identity, tenant, subject=None):
+    if tenant is None or not tenant.is_active:
+        raise HTTPException(403, 'Tenant is missing or inactive')
+    db.info['tenant_id'] = tenant.id
+    return limit_actor(Actor(identity['name'], identity['role'], subject, tenant.id))
 
 def current_actor(request: Request, credentials: HTTPAuthorizationCredentials = Depends(bearer), db=Depends(get_db)) -> Actor:
     if not credentials and request.cookies.get('rae_session'):
@@ -33,7 +47,7 @@ def current_actor(request: Request, credentials: HTTPAuthorizationCredentials = 
         if request.method not in ('GET', 'HEAD', 'OPTIONS'):
             check_origin(request)
         identity = member(session.subject)
-        return limit_actor(Actor(identity['name'], identity['role'], os.getenv('RAE_OIDC_ISSUER', '')+':'+session.subject))
+        return bind_actor(db, identity, tenant, os.getenv('RAE_OIDC_ISSUER', '')+':'+session.subject)
     try:
         keys = json.loads(os.getenv('RAE_API_KEYS', '{}'))
         hashed_keys = json.loads(os.getenv('RAE_API_KEY_HASHES', '{}'))
@@ -60,7 +74,9 @@ def current_actor(request: Request, credentials: HTTPAuthorizationCredentials = 
                         raise HTTPException(401, 'API key expired')
                 if identity.get('role') not in ('admin', 'operator', 'viewer') or not identity.get('name'):
                     raise HTTPException(503, 'Invalid API-key identity')
-                return limit_actor(Actor(identity['name'], identity['role']))
+                key = identity.get('tenant_key') or os.getenv('RAE_TENANT_KEY', DEFAULT_TENANT_KEY)
+                tenant = db.scalar(select(Tenant).where(Tenant.tenant_key == key))
+                return bind_actor(db, identity, tenant)
     raise HTTPException(401, 'Invalid or missing API key', headers={'WWW-Authenticate':'Bearer'})
 
 def operator(actor: Actor = Depends(current_actor)) -> Actor:

@@ -43,11 +43,12 @@ It never prints credentials, authorization codes, or tokens.
 
 ## Identity boundaries
 
-This release is **one installation for one organization**. Existing registry,
-policy and audit tables still lack tenant isolation. Organization directory rows
-do not establish a multi-customer security boundary. Do not onboard another
-customer into this same database until every resource and authorization query
-is tenant scoped.
+Registry, policy, audit and run queries now enforce tenant ownership. Existing
+resources were assigned to Southern Shade Technologies. API keys can specify a
+server-owned `tenant_key`; keys without one use the installation tenant. SSO
+still supports one configured installation tenant. Provisioning new tenants is
+an installation operation, unavailable to ordinary tenant administrators.
+See [execution evidence](execution-evidence.md) for boundaries and verification.
 
 `RAE_SSO_MEMBERS` maps provider subject IDs to server-owned names and roles.
 Only explicitly listed subjects can sign in. Removing a member or deactivating
@@ -75,7 +76,7 @@ denial caused by a matching policy or emergency stop includes its ID.
 `GET /api/orchestrations/runs` accepts `status`, `workflow_id`, `started_after`,
 `started_before`, `limit` (1–100) and `offset`. Use timezone-qualified ISO timestamps.
 `GET /api/orchestrations/runs/{run_id}` returns the run and ordered step timeline.
-Existing viewer/operator/admin access applies installation-wide.
+Existing viewer/operator/admin access applies within the authenticated tenant.
 
 Run/step states are `pending`, `success`, `error`, `denied`. Start records commit
 before work begins. A process crash may leave a run pending; this is not proof

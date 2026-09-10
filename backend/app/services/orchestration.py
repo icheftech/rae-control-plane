@@ -15,6 +15,7 @@ from app.services.audit import append_event
 from app.services.governance import evaluate
 from app.services.model_provider import ModelProvider
 from app.services.run_history import RunHistory, safe_usage
+from app.services.tenancy import require_owned
 
 
 class OrchestrationMessage(BaseModel):
@@ -78,7 +79,7 @@ class OrchestrationRunner:
             return await self._execute(request, history)
 
     async def _execute(self, request: OrchestrationRunRequest, history: RunHistory) -> RunResult:
-        workflow = self.db.get(Workflow, request.workflow_id)
+        workflow = require_owned(self.db, Workflow, request.workflow_id)
         if workflow is None or not workflow.is_active:
             raise HTTPException(404, "Workflow is missing or inactive")
 

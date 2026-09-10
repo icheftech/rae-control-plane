@@ -28,6 +28,7 @@ Usage:
 from app.db.base import Base
 from .orchestration_run import OrchestrationRun, OrchestrationRunEvent
 from .browser_session import BrowserSession
+from .execution_evidence import ExecutionContext, PolicySnapshot, ExecutionEvent
 
 # Phase 1: Registry Backbone (MAP)
 from .workflow import Workflow, WorkflowStatus, RiskLevel as WorkflowRiskLevel
@@ -67,6 +68,16 @@ from .change_request import (
 )
 
 # Export all models and enums
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+
+# Every resource served by the control plane has explicit organization ownership.
+# Historical audit hashes are preserved: tenant ownership is an additional column.
+for _owned_model in (Capability, Connector, ControlPolicy, KillSwitch,
+                     BreakGlass, AuditEvent, EnforcementGate, GateExecution,
+                     ChangeRequest, OrchestrationRun, OrchestrationRunEvent):
+    _owned_model.tenant_id = Column(UUID(as_uuid=True), ForeignKey('tenants.id'), nullable=False, index=True)
+
 __all__ = [
     # Base
     "Base",
