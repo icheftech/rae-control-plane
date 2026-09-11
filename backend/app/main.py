@@ -11,6 +11,7 @@ from app.api import registry, tenants, llm, audit, change_requests, orchestratio
 from app.services import model_provider
 from app.services.telemetry import RequestTelemetry
 from app.api import sso
+from app.api import local_jobs
 from starlette.middleware.sessions import SessionMiddleware
 
 @asynccontextmanager
@@ -33,6 +34,7 @@ app.include_router(tenants.router, prefix='/api', dependencies=[Depends(current_
 app.include_router(change_requests.router, prefix='/api')
 app.include_router(audit.router, prefix='/api')
 app.include_router(orchestrations.router)
+app.include_router(local_jobs.router)
 app.include_router(llm.router)
 @app.get('/api/me')
 def me(actor: Actor=Depends(current_actor)):

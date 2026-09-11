@@ -46,8 +46,9 @@ returns only the current tenant's event count and no foreign event details.
 ## Limits
 
 Older runs show no fabricated context or policy snapshot. Runtime execution
-remains sequential; this slice does not implement retries, branching, workers,
-crash reconciliation or in-flight cancellation. A crash can leave a pending run.
+remains sequential, without retries, branching or in-flight cancellation. The
+optional [local worker](local-worker.md) now reconciles its own interrupted jobs
+on restart. Direct HTTP runs can still remain pending after a process crash.
 Authorization is preflight, not continuous enforcement. These tests do not amount
 to a production security audit or customer-ready SSO provisioning.
 

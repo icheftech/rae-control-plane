@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { History } from 'lucide-react';
 import { request, Row } from '@/lib/api';
+import LocalJobs from './local-jobs';
 
 const date = (value?: string) => value ? new Date(value).toLocaleString() : '—';
 
-export default function RunHistory({rows, workflows, token}: {rows: Row[]; workflows: Row[]; token: string}) {
+export default function RunHistory({rows, workflows, token, canSubmit=false}: {rows: Row[]; workflows: Row[]; token: string; canSubmit?:boolean}) {
   const [selected, setSelected] = useState<Row | null>(null);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
@@ -18,6 +19,7 @@ export default function RunHistory({rows, workflows, token}: {rows: Row[]; workf
     finally {setBusy(false);}
   }
   return <>
+    <LocalJobs token={token} workflows={workflows} canSubmit={canSubmit} onRun={id=>void detail(id)}/>
     <section className="panel">
       <div className="panel-title"><h2>Orchestration runs</h2><label>Status <select value={status} onChange={e=>setStatus(e.target.value)}><option value="">All</option>{['pending','success','error','denied'].map(s=><option key={s}>{s}</option>)}</select></label></div>
       <p className="run-note">Latest 100 runs · Includes direct model calls. Pending means no completion has been recorded.</p>

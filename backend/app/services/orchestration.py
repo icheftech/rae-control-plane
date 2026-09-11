@@ -74,8 +74,9 @@ class OrchestrationRunner:
         self.actor = actor
         self.provider = provider
 
-    async def run(self, request: OrchestrationRunRequest) -> RunResult:
-        with RunHistory(self.db, self.actor, request.workflow_id, len(request.steps)) as history:
+    async def run(self, request: OrchestrationRunRequest, run_id=None, before_step=None) -> RunResult:
+        self.before_step = before_step
+        with RunHistory(self.db, self.actor, request.workflow_id, len(request.steps), run_id=run_id) as history:
             return await self._execute(request, history)
 
     async def _execute(self, request: OrchestrationRunRequest, history: RunHistory) -> RunResult:
@@ -97,6 +98,8 @@ class OrchestrationRunner:
 
         try:
             for position, step in enumerate(request.steps):
+                if self.before_step:
+                    self.before_step()
                 model = (step.model or self.provider.default_model) if step.type == 'llm_chat' else None
                 with history.step(position, step.id, step.type, model) as event:
                     result = await self._run_step(workflow, run_id, context, step)

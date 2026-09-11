@@ -89,6 +89,10 @@ Draft → under review → pending approval → approved. Review and approval re
 
 ## Validation
 
+The optional [durable local worker](docs/local-worker.md) adds a persistent job
+queue, worker heartbeats and conservative restart recovery. Use **Orchestration
+runs → Local worker jobs** to submit installed local tasks and inspect outcomes.
+
 From `backend`, with the virtual environment active and Docker running:
 
 ```sh

@@ -28,6 +28,7 @@ Usage:
 from app.db.base import Base
 from .orchestration_run import OrchestrationRun, OrchestrationRunEvent
 from .browser_session import BrowserSession
+from .local_job import LocalJob, LocalWorker
 from .execution_evidence import ExecutionContext, PolicySnapshot, ExecutionEvent
 
 # Phase 1: Registry Backbone (MAP)
